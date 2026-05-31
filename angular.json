@@ -25,7 +25,9 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/@ngxpert/hot-toast/src/styles/styles.css",
+              "node_modules/primeicons/primeicons.css"
             ]
           },
           "configurations": {
@@ -62,7 +64,11 @@
               "buildTarget": "qouark-front:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "host": "localhost",
+            "port": 3000
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

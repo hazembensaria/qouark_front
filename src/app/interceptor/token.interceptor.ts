@@ -1,0 +1,65 @@
+import { BehaviorSubject, catchError, Observable, switchMap, throwError } from "rxjs";
+import { IResponse } from "../interface/response";
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
+import { inject } from "@angular/core";
+
+import { Key } from "../enum/cache.key";
+import { getFormDate } from "../utils/fileutils";
+import { StorageService } from "../service/storage";
+import { UserService } from "../service/user";
+
+let isTokenRefreshing: boolean = false;
+let refreshTokenSubject: BehaviorSubject<IResponse> = new BehaviorSubject(null);
+
+export const tokenInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn, userService = inject(UserService), storage = inject(StorageService)): Observable<HttpEvent<unknown>> => {
+    if (request.url.includes('verify') || request.url.includes('home') || request.url.includes('resetpassword') || request.url.includes('register') || request.url.includes('login') || request.url.includes('oauth2')) {
+        return next(request);
+    }
+    return next(addAuthorizationTokenHeader(request, storage.get(Key.TOKEN)))
+        .pipe(
+            catchError(error => {
+                if (error instanceof HttpErrorResponse && error.error?.code === 401 && error.error?.message === 'Your session has expired') {
+                    console.log('REFRESHING TOKEN');
+                    return handleRefreshToken(request, next, userService, storage);
+                } else {
+                    return throwError(() => error);
+                }
+            })
+        );
+
+};
+
+const addAuthorizationTokenHeader = (request: HttpRequest<unknown>, token: string): HttpRequest<unknown> => {
+    return request.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+};
+
+const handleRefreshToken = (request: HttpRequest<unknown>, next: HttpHandlerFn, userService: UserService, storage: StorageService): Observable<HttpEvent<unknown>> => {
+    if (!isTokenRefreshing) {
+        console.log('Refreshing token');
+        isTokenRefreshing = true;
+        refreshTokenSubject.next(null);
+        return userService.refreshToken$(formData(storage.get(Key.REFRESH_TOKEN))).pipe(
+            switchMap((response: any) => {
+                console.log('Token refresh response', response);
+                isTokenRefreshing = false;
+                refreshTokenSubject.next(response);
+                console.log('Sending original request', request);
+                return next(addAuthorizationTokenHeader(request, response.access_token));
+            }),
+            catchError(error => {
+                userService.logOut();
+                return throwError(() => error);
+            })
+        )
+
+    } else {
+        return refreshTokenSubject.pipe(
+            switchMap((response: any) => {
+                console.log('Already refreshed');
+                return next(addAuthorizationTokenHeader(request, response.access_token));
+            })
+        );
+    }
+};
+
+const formData = (refresh_token: string) => getFormDate({ refresh_token, client_id: 'client', code_verifier: '5AL6Bh2JdoIj4seR8UooJcW8GF3W-ofYfAz3RVpXiaJ-Pn_tXjjc_XO9yWTPbqA1sd-ZZC04eVNGJ8PHC1Gr-KT2TcINTFT4WMKjARb5OziA3XKoQpDIuRN5E1dif_9A', grant_type: 'refresh_token', redirect_url: 'http://localhost:3000' }, null);

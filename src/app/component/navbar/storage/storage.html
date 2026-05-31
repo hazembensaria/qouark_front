@@ -1,0 +1,391 @@
+<!-- Add padding to the right so content doesn't hide behind the fixed sidebar -->
+<div class="pt-20 lg:pr-60 pb-10">
+  <div class="container mx-auto px-6 max-w-7xl">
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <!-- HEADER -->
+    <div class="flex flex-wrap justify-between items-center gap-3">
+      <h3 class="text-xl font-bold">
+        {{ store.currentFolder()?.name === 'root' ? 'My Drive' : store.currentFolder()?.name }}
+      </h3>
+
+      <div class="flex gap-2">
+        <button
+          (click)="goBackToRoot()"
+          class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded"
+        >
+          Root
+        </button>
+              
+        <button
+          (click)="openCreateFolderModal()"
+          class="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-semibold py-2 px-4 rounded"
+        >
+          + Add new
+        </button>
+        <button (click)="filesInput.click()" class="flex items-center rounded-md bg-white border border-gray-200 hover:bg-gray-50 py-2.5 px-4 gap-1.5 text-xs font-medium text-gray-700 transition-all duration-300">
+          Upload
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+          </svg>
+        </button>
+        <input type="file" name="file" #filesInput (change)="uploadFiles($event.target.files)" accept="*/*" multiple class="hidden" />        
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 my-4"></div>
+
+    <!-- ================= EMPTY STATE ================= -->
+    @if (hasNoFolders() && hasNoFiles()) {
+      <div class="flex flex-col items-center justify-center py-20 text-center">
+        <p class="text-lg font-semibold text-gray-700">This folder is empty</p>
+        <p class="text-sm text-gray-500 mt-1">Create a folder or upload files to get started</p>
+        <button (click)="openCreateFolderModal()" class="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+          Create Folder
+        </button>
+      </div>
+    }
+
+    <!-- ================= FOLDERS ================= -->
+    @if (store.storageFolders()?.length > 0) {
+      <div class="flex items-center gap-2 mb-4 text-gray-700">
+        <h4 class="text-md font-semibold">Folders</h4>
+        <span class="text-xs text-gray-400">({{store.storageFolders()?.length}})</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+        @for (folder of store.storageFolders(); track folder.storageFolderUuid) {
+          <div class="relative bg-white border border-gray-200 rounded-xl hover:shadow-sm transition p-4 cursor-pointer" (click)="openFolder(folder.storageFolderUuid)">
+            
+            <div class="flex justify-between items-start">
+              <div class="flex items-center gap-2">
+                <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+                </svg>
+                <p class="text-sm font-medium text-gray-800 truncate">{{ folder.name }}</p>
+              </div>
+
+              <button (click)="toggleDropdown(folder.storageFolderUuid, $event)" class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+              </button>
+            </div>
+            
+            <div class="mt-4 text-xs text-gray-400">
+              13/05/2026 at 16:33
+            </div>
+
+            <!-- Dropdown Menu -->
+            @if (activeDropdown() === folder.storageFolderUuid) {
+              <div class="absolute top-10 right-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-2" (click)="$event.stopPropagation()">
+                <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Select
+                </button>
+                <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg> Add to favorites
+                </button>
+                <button (click)="openShareModal(folder, $event)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> Share Folder
+                </button>
+                <div class="my-1 border-t border-gray-100"></div>
+                <button (click)="deleteFolder(folder.storageFolderUuid, folder.name)" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Delete
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ================= FILES ================= -->
+    @if (store.storageFiles?.()?.length > 0) {
+      <div class="flex items-center gap-2 mb-4 text-gray-700">
+        <h4 class="text-md font-semibold">Files</h4>
+        <span class="text-xs text-gray-400">({{store.storageFiles()?.length}})</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        @for (file of store.storageFiles(); track file.storageFileUuid) {
+          <div class="relative bg-white border border-gray-200 rounded-xl hover:shadow-sm transition group flex flex-col">
+            <!-- File Thumbnail -->
+            <div class="bg-gray-50 h-32 rounded-t-xl flex items-center justify-center p-4 border-b border-gray-100">
+              <div class="text-blue-500 text-4xl">📄</div>
+            </div>
+            
+            <!-- File Info -->
+            <div class="p-3">
+              <div class="flex justify-between items-start">
+                <div class="min-w-0 pr-2">
+                  <p class="text-sm font-medium text-gray-800 truncate" [title]="file.name">{{ file.name }}</p>
+                  <p class="text-xs text-gray-400 mt-0.5">14/05/2026 at 12:13</p>
+                </div>
+                <button (click)="toggleDropdown(file.storageFileUuid, $event)" class="text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Dropdown Menu -->
+            @if (activeDropdown() === file.storageFileUuid) {
+              <div class="absolute top-12 right-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-2" (click)="$event.stopPropagation()">
+                <button (click)="downloadFile(file.storageFileUuid); $event.stopPropagation()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download
+                </button>
+                <button (click)="openShareModal(file, $event)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> Share File
+                </button>
+                <div class="my-1 border-t border-gray-100"></div>
+                <button (click)="deleteFile(file.storageFileUuid , file.name)" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Delete
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>
+
+<!-- ================= FIXED RIGHT SIDEBAR ================= -->
+<!-- Sidebar is fixed to the right side, full height, width w-60 (240px) -->
+<aside class="fixed right-0 top-0 w-60 h-screen bg-[#fafbfc] border-l border-gray-100 hidden lg:flex flex-col z-30 pt-4 shadow-sm">
+  
+  <!-- Top Profile / CD icon -->
+  <div class="flex justify-end px-5 mb-8">
+    <div class="w-10 h-10 border border-gray-200 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-500 font-medium cursor-pointer hover:bg-gray-50 transition">
+      Hb
+    </div>
+  </div>
+
+<!-- FILE SPACE NAV -->
+<div class="mb-6 px-3">
+  <h5 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-2">
+    File Space
+  </h5>
+
+  <nav class="space-y-0.5">
+
+    <!-- Recent Files -->
+    <a
+      routerLink="/files/recent"
+      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+    >
+      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+        </path>
+      </svg>
+      Recent files
+    </a>
+
+    <!-- My Drive -->
+    <a
+      routerLink="/files"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+    >
+      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+        </path>
+      </svg>
+      My Drive
+    </a>
+
+    <!-- Favorites -->
+    <a
+      routerLink="/files/favorites"
+      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+    >
+      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+        </path>
+      </svg>
+      Favorites
+    </a>
+
+    <!-- Shared -->
+    <a
+      routerLink="/files/shared"
+      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+    >
+      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+        </path>
+      </svg>
+      Shared with me
+    </a>
+
+    <!-- Trash -->
+    <a
+      routerLink="/files/trash"
+      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+      class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition mt-1"
+    >
+      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+        </path>
+      </svg>
+      Trash
+    </a>
+
+  </nav>
+</div>
+
+  <!-- STORAGE INFO -->
+  <div class="mt-auto px-5 pb-6 pt-6 border-t border-gray-100/80 text-center bg-gradient-to-t from-white to-transparent">
+    <div class="flex items-center justify-center gap-2 text-[13px] font-semibold text-gray-800 mb-1">
+      <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+      Storage
+    </div>
+    <p class="text-[12px] text-gray-400 mb-3">2 MB of 100 MB used</p>
+    
+    <!-- Progress bar -->
+    <div class="w-full h-[5px] bg-gray-100 rounded-full overflow-hidden">
+      <div class="bg-[#8b5cf6] w-[2%] h-full rounded-full"></div>
+    </div>
+  </div>
+  
+</aside>
+
+<!-- ================= CREATE FOLDER MODAL ================= -->
+@if (isFolderModalOpen()) {
+  <div id="folder-modal-backdrop" (click)="onBackdropClick($event)" class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6" (click)="$event.stopPropagation()">
+      <h2 class="text-xl font-bold mb-4">Create Folder</h2>
+      <input type="text" [(ngModel)]="folderName" placeholder="Folder name..." class="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" />
+      <div class="flex justify-end gap-2 mt-5">
+        <button (click)="closeCreateFolderModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700">Cancel</button>
+        <button (click)="saveFolder()" class="px-4 py-2 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded">Create</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= SHARE MODAL ================= -->
+@if (isShareModalOpen()) {
+  <div id="share-modal-backdrop" (click)="onBackdropClick($event)" class="fixed inset-0 z-50 bg-black/40 flex justify-end">
+    <div class="bg-white w-full max-w-lg h-full sm:h-auto sm:my-4 sm:mr-4 rounded-xl shadow-2xl p-6 flex flex-col overflow-y-auto" (click)="$event.stopPropagation()">
+      
+      <!-- Close / Header -->
+      <div class="flex justify-between items-start mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">{{ selectedItemForShare()?.name }}</h2>
+        <button (click)="closeShareModal()" class="text-gray-400 hover:text-gray-600 p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Add members input -->
+      <div class="mb-8">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Name or email</label>
+        <div class="flex gap-2 items-start">
+          
+          <div class="relative flex-1 flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#8b5cf6] focus-within:border-transparent">
+            
+            <svg class="w-5 h-5 text-gray-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            
+            <input 
+              [value]="searchQuery()"
+              (input)="searchUsersByNameOrEmail($event.target.value)" 
+              type="text" 
+              autocomplete="off"
+              placeholder="Select members" 
+              class="bg-transparent border-none outline-none w-full text-sm text-gray-700 placeholder-gray-400" 
+            />
+            
+            <div class="border-l pl-2 ml-2 flex items-center shrink-0">
+              <select [ngModel]="sharePermission()" (ngModelChange)="sharePermission.set($event)" class="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer">
+                <option value="READ">Viewer</option>
+                <option value="WRITE">Editor</option>
+              </select>
+            </div>
+
+            <!-- DROPDOWN RESULTS -->
+            @if (store.users()?.length > 0 && searchQuery().length > 0 && !selectedUserToShare()) {
+              <div class="absolute left-0 top-full mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[60] max-h-60 overflow-y-auto">
+                @for (user of store.users(); track user.id) {
+                  <div (click)="selectUser(user)" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors">
+                    @if (user.avatarUrl) {
+                      <img [src]="user.avatarUrl" class="w-8 h-8 rounded-full object-cover">
+                    } @else {
+                      <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold uppercase">
+                        {{ user.name ? user.name.charAt(0) : user.email.charAt(0) }}
+                      </div>
+                    }
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 truncate">{{ user.name }}</p>
+                      <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <button (click)="shareFolder()" class="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium transition text-sm shrink-0"
+                  [disabled]="!selectedUserToShare()"
+                  [class.opacity-50]="!selectedUserToShare()"
+                  [class.cursor-not-allowed]="!selectedUserToShare()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg> 
+            Add
+          </button>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-medium text-gray-900 mb-4">People with access</h3>
+
+      <!-- Public share toggle -->
+      <div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-white rounded-full shadow-sm">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+          </div>
+          <span class="text-sm font-medium text-gray-700">Public share</span>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" value="" class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8b5cf6]"></div>
+        </label>
+      </div>
+
+      <!-- Search list -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm text-gray-500">1 team member</span>
+        <div class="relative w-48">
+          <svg class="w-4 h-4 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" placeholder="Find someone ..." class="w-full bg-gray-50 border border-gray-100 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#8b5cf6]" />
+        </div>
+      </div>
+
+      <!-- User List -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div class="w-10 h-10 rounded-full bg-[#38bdf8] text-white flex items-center justify-center font-semibold">
+                HB
+              </div>
+              <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+            </div>
+            <span class="text-sm font-medium text-gray-900">hazem ben saria</span>
+          </div>
+          <span class="text-sm text-gray-500">Owner</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}

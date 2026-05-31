@@ -1,0 +1,65 @@
+<!-- Backdrop -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+  (click)="close()"
+>
+  <!-- Modal panel (stop click propagation so inside clicks don't close) -->
+  <div
+    class="w-full max-w-lg overflow-hidden rounded-2xl border border-white/20 bg-white/90 shadow-2xl backdrop-blur-md transition-all duration-300"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Content -->
+    <div class="p-6 sm:p-7">
+      <div class="flex items-start gap-4">
+        @if (type() === 'danger') {
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+            ⚠️
+          </div>
+        } @else if (type() === 'warning') {
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-yellow-100 text-yellow-600">
+            ⚠
+          </div>
+        } @else if (type() === 'success') {
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+            ✓
+          </div>
+        }
+
+        <div class="min-w-0 flex-1">
+          <h3 class="text-xl font-semibold tracking-tight text-gray-900">
+            {{ message() }}
+          </h3>
+          <p class="mt-1 text-sm text-gray-600">
+            {{ subtitle() }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50/70 px-6 py-4">
+      <button
+        type="button"
+        (click)="close()"
+        class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        (click)="submit($event)"
+        class="rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-sm transition"
+        [ngClass]="
+          type() === 'danger'
+            ? 'bg-red-500 hover:bg-red-600'
+            : type() === 'success'
+            ? 'bg-emerald-500 hover:bg-emerald-600'
+            : 'bg-amber-500 hover:bg-amber-600'
+        "
+      >
+        Yes, I'm sure
+      </button>
+    </div>
+  </div>
+</div>

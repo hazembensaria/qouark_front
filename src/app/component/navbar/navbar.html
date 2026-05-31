@@ -1,0 +1,176 @@
+
+  <!-- app-layout.component.html -->
+<div class="h-screen  w-screen overflow-hidden bg-gray-100">
+  <!-- Fixed Sidebar -->
+  <aside
+    class="fixed left-0 top-0 z-40 h-screen bg-[#f4f5f7] border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out"
+    [class.w-[220px]]="!collapsed"
+    [class.w-[74px]]="collapsed"
+    [class.duration-300]="collapsed"
+  [class.transition-all]="collapsed"
+  >
+    <!-- Top -->
+    <div class="p-3 border-b border-gray-200 shrink-0 relative">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="h-8 w-8 rounded-lg bg-violet-600 text-white grid place-items-center text-sm font-bold">Q</div>
+          @if (!collapsed) {
+            <h1 class="text-xl font-extrabold tracking-tight text-violet-600 leading-none">qouark</h1>
+          }
+        </div>
+      </div>
+
+      <!-- Toggle button on edge middle -->
+      <button
+        (click)="toggleSidebar()"
+        class="absolute top-[20%] -right-4 -translate-y-1/2 z-50 h-8 w-8 rounded-lg bg-white border border-gray-200 shadow-sm text-gray-600 hover:text-violet-600 hover:border-violet-200 hover:bg-violet-50 transition"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto transition-transform duration-300" [class.rotate-180]="collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <!-- clickable profile card -->
+<div class="relative">
+<button
+  type="button"
+  (click)="toggleProfileMenu(); $event.stopPropagation()"
+  class="mt-3 w-full rounded-xl bg-white border border-gray-200 p-2.5 flex items-center gap-2.5 hover:border-gray-300 transition"
+  [class.justify-center]="collapsed"
+>
+    <div class="relative shrink-0">
+      <div class="h-9 w-9 rounded-full bg-sky-500 text-white grid place-items-center text-sm font-semibold">HB</div>
+      <span class="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
+    </div>
+    @if (!collapsed) {
+      <div class="min-w-0 text-left">
+        <p class="text-sm font-semibold text-gray-900 truncate">{{store.profile()?.firstName}}</p>
+        <p class="text-xs text-gray-500 truncate">{{store.profile()?.firstName}} {{store.profile()?.lastName}}</p>
+      </div>
+    }
+  </button>
+
+  <!-- menu -->
+@if (profileMenuOpen) {
+  <div
+    class="absolute left-full top-3 ml-3 w-[220px] rounded-xl border border-gray-200 bg-white shadow-lg z-[80] overflow-hidden"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- header -->
+    <div [routerLink]="['/profile']" class="p-3 flex items-center gap-2.5 hover:bg-gray-50 transition cursor-pointer">
+      <div class="relative shrink-0">
+        <div class="h-10 w-10 rounded-full bg-sky-500 text-white grid place-items-center text-sm font-semibold">HB</div>
+        <span class="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold text-gray-800 truncate">{{store.profile()?.firstName}}</p>
+        <p class="text-xs text-gray-400 truncate">{{store.profile()?.email}}</p>
+      </div>
+    </div>
+
+    <div class="h-px bg-gray-200"></div>
+
+    <div class="p-2">
+      <button class="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-gray-50 text-gray-700 text-sm">
+        <i class="pi pi-cog text-sm"></i><span>User Settings</span>
+      </button>
+
+      <button class="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-gray-50 text-gray-700 text-sm">
+        <span class="h-2.5 w-2.5 rounded-full bg-green-500 inline-block"></span>
+        <span>Active</span>
+        <i class="pi pi-angle-right ml-auto text-xs"></i>
+      </button>
+
+      <button (click)="logOut()" class="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-red-50 text-red-500 text-sm">
+        <i class="pi pi-sign-out text-sm"></i><span>Logout</span>
+      </button>
+            <button [routerLink]="['/organization']" class="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-gray-50 text-gray-700 text-sm">
+        <i class="pi pi-cog text-sm"></i><span>Create Organization</span>
+      </button>
+      <button [routerLink]="['/users']" class="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-gray-50 text-gray-700 text-sm">
+        <i class="pi pi-cog text-sm"></i><span>Manage Team Members</span>
+      </button>
+      
+      
+    </div>
+  </div>
+}
+</div>
+    </div>
+
+    <!-- Only main links scroll -->
+    <div class="flex-1 min-h-0 px-2.5 py-3">
+      <nav class="h-full overflow-y-auto custom-scroll space-y-1 pr-1">
+        @for (item of mainLinks; track item.label) {
+          <a
+            [routerLinkActive]="['bg-white', 'text-gray-900']"
+            [routerLink]="item.route"
+            class="group flex items-center rounded-lg px-2.5 py-2 text-sm transition"
+            [class.justify-center]="collapsed"
+            [class.gap-2.5]="!collapsed"
+            [class.bg-white]="item.active"
+            [class.text-gray-900]="item.active"
+            [class.text-gray-600]="!item.active"
+            [class.hover:bg-white]="!item.active"
+            [class.hover:text-gray-800]="!item.active"
+          >
+            <span class="w-4 h-4 shrink-0 inline-flex items-center justify-center">
+              <i [class]="item.iconClass + ' text-[16px] leading-none'"></i>
+            </span>
+
+            @if (!collapsed) { <span class="font-medium">{{ item.label }}</span> }
+
+            @if (!collapsed && item.unread && item.unread > 0) {
+              <span class="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-violet-600 text-white text-[11px] grid place-items-center font-semibold">
+                {{ item.unread }}
+              </span>
+            }
+          </a>
+        }
+      </nav>
+    </div>
+
+    <!-- Bottom fixed -->
+    <div class="px-2.5 pb-2.5 shrink-0">
+      @if (!collapsed) {
+        <div class="rounded-xl border border-violet-100 bg-white p-3 shadow-sm">
+          <div class="flex items-center gap-2 text-violet-600">
+            <span class="text-sm">🚀</span>
+            <p class="text-sm font-semibold text-gray-900">Upgrade For More Power</p>
+          </div>
+          <p class="mt-1.5 text-xs text-gray-600">Access unlimited tasks, advanced features and more.</p>
+          <button class="mt-3 w-full rounded-lg bg-violet-600 text-white py-2 text-sm font-semibold hover:bg-violet-700 transition">Upgrade</button>
+        </div>
+      }
+
+      <nav class="mt-3 space-y-1">
+        @for (item of bottomLinks; track item.label) {
+          <a
+            [routerLink]="item.route"
+            class="flex items-center rounded-lg px-2.5 py-2 text-sm text-gray-600 hover:bg-white hover:text-gray-800 transition"
+            [class.justify-center]="collapsed"
+            [class.gap-2.5]="!collapsed"
+          >
+            <span class="w-4 h-4 shrink-0 inline-flex items-center justify-center">
+              <i [class]="item.iconClass + ' text-[16px] leading-none'"></i>
+            </span>
+            @if (!collapsed) { <span class="font-medium">{{ item.label }}</span> }
+          </a>
+        }
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main
+    class="h-screen overflow-y-auto ease-in-out bg-white"
+    [class.ml-[220px]]="!collapsed"
+    [class.ml-[74px]]="collapsed"
+    [class.duration-300]="collapsed"
+    [class.transition-all]="collapsed"
+  >
+    <div class="min-h-full pl-4 ">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

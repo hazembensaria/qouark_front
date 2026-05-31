@@ -1,0 +1,61 @@
+    <!-- <nav class="bg-gray-900 fixed w-full top-0 left-0 z-40">
+        <div class="container h-16 mx-auto">
+            <div class="h-16 flex items-center justify-between">
+                <div class="flex flex-1 items-center justify-left sm:items-stretch sm:justify-start">
+                    <div [routerLink]="['/']" class="flex-shrink-0 items-center cursor-pointer">
+                        <img class="h-8 w-auto" src="https://cdn-icons-png.flaticon.com/512/9732/9732800.png" alt="Ticket App">
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="http://localhost:8080/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://localhost:3000&code_challenge_method=S256&code_challenge=PWlAu3anniGd9FmIdI0nSnIW7y0Mburm2Az_NsIginA" class="hover:bg-gray-700 p-2.5 text-white hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center sm:mr-3">
+                        Login
+                        <svg xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke="currentColor" class="shrink-0 size-4"><path d="m15 4.5 7.5 7.5-7.5 7.5" /></svg>
+                    </a>
+                    <a [routerLink]="['register']" [routerLinkActive]="['bg-gray-700']" class="hover:bg-gray-700 p-1 text-white font-medium rounded-lg hidden text-sm px-5 py-2.5 text-center sm:inline-flex items-center lg:mr-3">
+                        Register
+                        <svg xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke="currentColor" class="shrink-0 size-4"><path d="m15 4.5 7.5 7.5-7.5 7.5" /></svg>
+                    </a>
+                    <a [routerLink]="['resetpassword']" [routerLinkActive]="['bg-gray-700']" class="hover:bg-gray-700 p-1 text-white font-medium rounded-lg hidden text-sm px-5 py-2.5 text-center lg:inline-flex items-center mr-3">
+                        Reset Password
+                        <svg xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke="currentColor" class="shrink-0 size-4"><path d="m15 4.5 7.5 7.5-7.5 7.5" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav> -->
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-10">
+          <a href="#" class="flex items-center gap-2">
+            <div class="grid h-9 w-9 place-items-center rounded-xl bg-brand-600 text-white font-bold">Q</div>
+            <span class="text-3xl font-bold tracking-tight text-brand-600">qouark</span>
+          </a>
+
+          <nav class="hidden items-center gap-7 md:flex">
+            <a [routerLink]="['register']" [routerLinkActive]="['text-violet-700']" class="text-[15px] font-medium text-slate-700 hover:text-brand-600">register</a>
+            <a [routerLink]="['resetpassword']" [routerLinkActive]="['text-violet-700']" class="text-[15px] font-medium text-slate-700 hover:text-brand-600">reset password</a>
+            <a href="#" class="text-[15px] font-medium text-slate-700 hover:text-brand-600">Use Cases</a>
+            <a href="#" class="text-[15px] font-medium text-slate-700 hover:text-brand-600">Resources</a>
+            <a href="#" class="text-[15px] font-medium text-slate-700 hover:text-brand-600">Pricing</a>
+          </nav>
+        </div>
+
+        <div class="hidden items-center gap-4 md:flex">
+          <a href="https://auth-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=http://localhost:3000&code_challenge_method=S256&code_challenge=lTKA0R03I9DjkhhdYe2c96zlu57bspkr03w8-7oMY24" class="text-[15px] font-semibold text-slate-700 hover:text-brand-600">Login</a>
+          <a href="#" class="rounded-xl bg-brand-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-soft hover:bg-brand-700">
+            Start free
+          </a>
+        </div>
+
+        <button class="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </header>
+<div > 
+    <router-outlet></router-outlet>
+</div>

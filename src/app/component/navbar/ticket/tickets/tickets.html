@@ -1,0 +1,478 @@
+<div class="mt-20">
+  <div class="container mx-auto">
+      <div class="flex flex-wrap justify-between items-center md:flex-nowrap space-y-2 md:space-y-0">
+        
+        <div class="flex items-center gap-4">
+          <h3 class="text-xl font-bold">Tickets ({{ store?.tickets()?.length }})</h3>
+          
+          <!-- View Switcher -->
+          <div class="flex items-center bg-gray-100 p-1 rounded-lg">
+            <button (click)="currentView.set('kanban')" [class.bg-white]="currentView() === 'kanban'" [class.shadow-sm]="currentView() === 'kanban'" class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 rounded-md transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+              Kanban
+            </button>
+            <button (click)="currentView.set('list')" [class.bg-white]="currentView() === 'list'" [class.shadow-sm]="currentView() === 'list'" class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 rounded-md transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              List
+            </button>
+            <button (click)="currentView.set('grid')" [class.bg-white]="currentView() === 'grid'" [class.shadow-sm]="currentView() === 'grid'" class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 rounded-md transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              Grid
+            </button>
+          </div>
+        </div>
+
+        <button (click)="openTicketModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Ticket</button>
+        
+        <div class="flex flex-wrap md:flex-nowrap justify-between items-center space-x-0 md:space-x-4 space-y-2 md:space-y-0">
+            <select (change)="filterTickets({page : 0 , size :store?.query()?.size , status: $event.target.value ==='Status (All)' ? '' : $event.target.value ,type: store?.query()?.type , filter:store?.query()?.filter})" name="status" class="w-full rounded-md border-0 ml-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-full0 sm:text-sm sm:leading-6">
+            @for(status of ['Status (All)', 'NEW', 'IN PROGRESS', 'IN REVIEW', 'COMPLETED', 'IMPEDED', 'ASSIGNED', 'CLOSED', 'PENDING']; track status){
+            <option [selected]="store?.query()?.status === status" [value]="status">{{status}}</option>
+            }
+            </select>
+            <select (change)="filterTickets({page : 0 , size :store?.query()?.size  , type: $event.target.value ==='Type (All)' ? '' : $event.target.value , status: store?.query()?.status , filter:store?.query()?.filter})" name="type" class="w-full rounded-md border-0 ml-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-full0 sm:text-sm sm:leading-6">
+            @for(type of ['Type (All)', 'BUG', 'DEFECT', 'INCIDENT', 'ENHANCEMENT', 'DESIGN']; track type){
+            <option [selected]="store?.query()?.type === type" [value]="type">{{type}}</option>
+            }
+        
+            </select>
+            <input  (input)="searchTickets({page : 0 , size :store?.query()?.size  , type: store?.query()?.type , status: store?.query()?.status , filter:$event.target.value})" type="search" name="title" placeholder="Search ticket title" class="w-full min-w-60 rounded-md border-0 px-2 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div class="mx-auto mt-3 mb-3 border-t border-gray-200"></div>
+    </div>
+    
+    <div class="container mx-auto">
+      @if(store?.tickets()?.length > 0){
+        
+        <!-- ================= GRID VIEW ================= -->
+        @if (currentView() === 'grid') {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6">
+            @for(ticket of store?.tickets(); track ticket.ticketUuid){
+                <div [routerLink]="['/tickets', ticket.ticketUuid]" class="p-4 flex flex-col rounded-xl bg-white border border-solid border-gray-200 overflow-auto cursor-pointer">
+              <div class="flex flex-row justify-between items-center">
+                  <div class="flex flex-row justify-between items-center gap-2">
+                    <div class="bg-gray-300 p-1 rounded-full text-[#0a365e] cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" /></svg>
+                    </div>
+                    <h4 class="font-sans text-md font-medium text-gray-900">
+                        Ticket #{{ ticket.ticketUuid.toUpperCase().split("-")[4] }}
+                        <span [ngClass]="[
+                      ticket.status === 'ENHANCEMENT' ? 'bg-green-600' : '',
+                      ticket.status === 'INCIDENT' ? 'bg-cyan-500' : '',
+                      ticket.status === 'DESIGN' ? 'bg-red-500' : '',
+                      ticket.status === 'DEFECT' ? 'bg-gray-500' : '',
+                      ticket.status === 'BUG' ? 'bg-orange-500' : '']"
+                        class="bg-cyan-300 text-xs font-medium w-fit px-1.5 py-0.5 rounded">
+                          {{ ticket.type }}
+                        </span>
+                    </h4>
+                  </div>
+              </div>
+              <h5 class="mt-4 text-base font-semibold text-gray-900 line-clamp-1">
+                  {{ ticket.title }}
+              </h5>
+              <p class="overflow-hidden line-clamp-2 text-md">
+                  {{ ticket.description }}
+              </p>
+              <div class="mt-4 flex flex-row justify-between items-center">
+                  <span [ngClass]="[
+                      ticket.status === 'NEW' ? 'bg-green-400' : '',
+                      ticket.status === 'IN PROGRESS' ? 'bg-yellow-400' : '',
+                      ticket.status === 'IN REVIEW' ? 'bg-blue-400' : '',
+                      ticket.status === 'COMPLETED' ? 'bg-green-600' : '',
+                      ticket.status === 'IMPEDED' ? 'bg-red-500' : '',
+                      ticket.status === 'ASSIGNED' ? 'bg-cyan-500' : '',
+                      ticket.status === 'CLOSED' ? 'bg-gray-500' : '',
+                      ticket.status === 'PENDING' ? 'bg-orange-500' : ''
+                  ]"
+                  class="bg-green-400 text-white text-xs font-semibold px-1 py-0.5 rounded">
+                      {{ ticket.status }}
+                  </span>
+                  <div class="flex flex-row justify-between items-center gap-8">
+                    <div class="flex flex-row justify-between items-center gap-1">
+                        <div class="text-xs">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" /></svg>
+                        </div>
+                        <span>{{ ticket.fileCount }}</span>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-1">
+                        <div class="text-xs">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
+                        </div>
+                        <span>{{ ticket.commentCount }}</span>
+                    </div>
+                  </div>
+              </div>
+              <div class="mt-2 flex flex-row justify-between items-center flex-wrap gap-1">
+                  <div class="min-w-44 bg-gray-200 rounded-full h-3">
+                    <div class="text-blue-100 bg-blue-600 text-xs font-medium text-center h-3 leading-none rounded-full" [style.width]="ticket.progress + '%'">
+                      {{ ticket.progress }}%
+                  </div>
+              </div>
+              <!-- <p class="antialiased font-sans text-sm font-medium text-blue-gray-500">Since {{ ticket.createdAt | date:'mediumDate' }}</p> -->
+            </div>
+              </div>
+            }
+          </div>
+        }
+
+  <!-- ================= KANBAN VIEW ================= -->
+@if (currentView() === 'kanban') {
+
+  <!-- Added styled horizontal scrollbar to main container and increased height -->
+  <div class="flex overflow-x-auto gap-6 pb-6 items-start h-[calc(100vh-180px)] pt-4 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300">
+
+    @for (col of kanbanColumns; track col) {
+
+      <!-- COLUMN container matching image style -->
+      <div class="w-[340px] shrink-0 bg-[#f4f5f7] rounded-[14px] p-3 flex flex-col gap-3 h-full max-h-full">
+
+        <!-- COLUMN HEADER -->
+        <div class="flex justify-between items-center px-1 shrink-0">
+
+          <div class="flex items-center gap-2">
+            @if (col === 'COMPLETED' || col === 'CLOSED') {
+              <svg class="w-[18px] h-[18px] text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>
+            } @else {
+              <svg class="w-[18px] h-[18px] text-gray-400 border border-gray-400 border-dashed rounded-full" viewBox="0 0 24 24" fill="none"></svg>
+            }
+            <h4 class="text-[15px] font-medium text-gray-800">
+              {{ col }}
+              <span class="text-gray-400 font-normal ml-1">
+                ({{ kanbanBoard[col]?.length || 0 }})
+              </span>
+            </h4>
+          </div>
+          
+          <button class="text-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center h-6 w-6 rounded-md hover:bg-gray-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+          </button>
+
+        </div>
+
+        <!-- ADD TASK BUTTON -->
+        <button (click)="openTicketModal()" class="w-full flex items-center justify-center gap-2 py-2 bg-white hover:bg-gray-50 text-gray-400 font-medium text-sm rounded-[10px] shadow-sm transition border border-transparent">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+          Add task
+        </button>
+
+        <!-- COLUMN BODY with Tailwind custom scrollbar styling -->
+        <div
+          class="flex flex-col gap-3 overflow-y-auto pr-1 pb-2 flex-1 min-h-[150px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400"
+          [id]="col"
+          [attr.data-column]="col"
+        >
+
+          @for (ticket of kanbanBoard[col]; track ticket.ticketUuid) {
+
+            <!-- TICKET CARD -->
+            <div
+              class="bg-white rounded-[12px] shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden cursor-pointer shrink-0"
+              [attr.data-ticket]="ticket.ticketUuid"
+            >
+
+              <!-- CARD CONTENT -->
+              <div
+                class="p-4 block"
+                (click)="navigateToTicket(ticket.ticketUuid)"
+              >
+
+                <!-- TITLE & AVATAR -->
+                <div class="flex justify-between items-start gap-4 mb-1">
+
+                  <p class="text-sm font-medium text-gray-800 leading-snug line-clamp-2">
+                    {{ ticket.title }}
+                  </p>
+                  
+                  <div class="w-7 h-7 shrink-0 rounded-full bg-[#38bdf8] text-white flex items-center justify-center text-[10px] font-bold">
+                    {{ ticket.firstName.charAt(0).toUpperCase() }}{{ ticket.lastName.charAt(0).toUpperCase()}}
+                  </div>
+
+                </div>
+
+                <!-- TICKET ID -->
+                 
+                <p [ngClass]="col === 'COMPLETED' || col === 'CLOSED' ? 'line-through decoration-red-500 text-black decoration-2' : 'text-black'" class="text-[13px] font-medium  mb-4">
+                  {{ticket.firstName.toUpperCase() | slice:0:3}}-{{ ticket.ticketUuid.toUpperCase().split("-")[4]}}
+                </p>
+
+                <!-- FOOTER -->
+                <div class="flex items-center gap-2 mt-auto">
+
+                  <!-- TYPE INDICATOR PILL -->
+                  <div class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 border border-gray-100" title="{{ ticket.type }}">
+                     <div [ngClass]="[
+                        ticket.type === 'ENHANCEMENT' ? 'bg-green-600' : '',
+                        ticket.type === 'INCIDENT' ? 'bg-cyan-500' : '',
+                        ticket.type === 'DESIGN' ? 'bg-red-500' : '',
+                        ticket.type === 'DEFECT' ? 'bg-gray-500' : '',
+                        ticket.type === 'BUG' ? 'bg-red-600' : 'bg-orange-500']"
+                      class="w-3 h-3 rounded-full flex items-center justify-center text-white">
+                        <span class="block w-1.5 h-1.5 bg-white rounded-full"></span>
+                      </div>
+                  </div>
+
+                  <!-- FILE COUNT PILL -->
+                  <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-100 text-xs font-medium text-gray-500">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-3.5 h-3.5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"
+                      />
+                    </svg>
+                    <span>{{ ticket.fileCount || 0 }}</span>
+                  </div>
+
+                  <!-- TIME PILL -->
+                  <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-100 text-xs font-medium text-gray-500">
+                    <svg class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"></path></svg>
+                    <span>00:00:00</span>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+}
+        <!-- ================= LIST VIEW ================= -->
+        @if (currentView() === 'list') {
+          <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                  <th class="px-4 py-3">Key</th>
+                  <th class="px-4 py-3">Title</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">Type</th>
+                  <th class="px-4 py-3">Created</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                @for(ticket of store?.tickets(); track ticket.ticketUuid) {
+                  <tr [routerLink]="['/tickets', ticket.ticketUuid]" class="hover:bg-gray-50 cursor-pointer transition">
+                    <td class="px-4 py-3 font-semibold text-gray-600">HAZ-{{ ticket.ticketUuid.toUpperCase().split("-")[4] }}</td>
+                    <td class="px-4 py-3 font-medium text-gray-900">{{ ticket.title }}</td>
+                    <td class="px-4 py-3">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-gray-100 text-gray-700 uppercase">
+                        {{ ticket.status }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="text-xs font-medium">{{ ticket.type }}</span>
+                    </td>
+                    <td class="px-4 py-3 text-gray-500">{{ ticket.createdAt | date:'shortDate' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+      }
+  </div>
+
+  @if(store?.pages() > 1 && currentView() !== 'kanban'){
+    <nav class="mt-6 flex justify-center" aria-label="Page navigation">
+      <ul class="flex items-center -space-x-px h-10 text-base">
+          <li [ngClass]="[store?.currentPage() == 0 ? 'pointer-events-none opacity-40' : 'cursor-pointer']" class="pointer-events-none opacity-40">
+            <a (click)="filterTickets({ page: store?.pages() - 1 , size :store?.query()?.size  , type: store?.query()?.type , status: store?.query()?.status , filter: store?.query()?.filter})" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-blue-600 bg-white border border-blue-300 border-e-0 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
+                <span class="sr-only">Previous</span>
+                <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                </svg>
+            </a>
+          </li>
+        @for(page of store?.pages() | ExtractArrayValue: 'number'; track $index){
+            <li [ngClass]="[store?.currentPage() == page ? 'bg-blue-50' : 'bg-white']" class="cursor-pointer">
+            <a (click)="filterTickets({ page , size :store?.query()?.size  , type: store?.query()?.type , status: store?.query()?.status , filter: store?.query()?.filter})" class="flex items-center justify-center px-4 h-10 leading-tight text-blue-600 border border-blue-300 hover:bg-blue-100 hover:text-blue-700">
+                {{ page + 1 }}
+            </a>
+          </li>
+        }
+          <li [ngClass]="[store?.currentPage() + 1 == (store?.pages()) ? 'pointer-events-none opacity-40' : 'cursor-pointer']">
+            <a (click)="filterTickets({ page: store?.pages() + 1 , size :store?.query()?.size  , type: store?.query()?.type , status: store?.query()?.status , filter: store?.query()?.filter})" class="flex items-center justify-center px-4 h-10 leading-tight text-blue-600 bg-white border border-blue-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
+                <span class="sr-only">Next</span>
+                <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                </svg>
+            </a>
+          </li>
+      </ul>
+    </nav>
+  }
+  
+  @if (store?.tickets()?.length === 0) {
+      <div class="container mx-auto">
+        <p class="text-lg font-semibold flex justify-center items-center">No tickets found</p>
+      </div>
+  }
+        
+@if (isTicketModalOpen) {
+  <div
+    id="ticket-modal-backdrop"
+    (click)="onBackdropClick($event)"
+    class="fixed inset-0 z-[1050] bg-slate-900/30 backdrop-blur-[2px] flex items-center justify-center p-4"
+  >
+    <div
+      class="w-full max-w-3xl rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden animate-[fadeIn_.2s_ease]"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-800">New Ticket</h2>
+        <button
+          (click)="closeTicketModal()"
+          class="h-9 w-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-lg"
+          type="button"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form #form="ngForm" (ngSubmit)="saveTicket(form)" class="px-6 py-5 space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Title</label>
+          <input
+            ngModel
+            name="title"
+            id="title"
+            type="text"
+            placeholder="Example: I cannot log in"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Description</label>
+          <textarea
+            ngModel
+            name="description"
+            id="description"
+            rows="4"
+            placeholder="Example: I'm not able to log in because my account has been locked"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 resize-none"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Type</label>
+            <select 
+            ngModel
+            name="type"
+            required
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
+                  @for(type of ['BUG', 'DEFECT', 'INCIDENT', 'ENHANCEMENT', 'DESIGN']; track type){
+                 <option
+                 [selected]="type === 'BUG'"
+                 [value]="type"
+                 >{{type}}</option>
+
+                  }
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Priority</label>
+            <select
+             ngModel
+             name="priority"
+             class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500">
+                  @for(priority of ['LOW', 'MEDIUM', 'HIGH']; track priority){
+                 <option
+                 [selected]="priority === 'LOW'"
+                 [value]="priority"
+                 >{{priority}}</option>
+
+                  }
+            </select>
+          </div>
+        </div>
+
+        <label for="dropzone-file" class="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 transition p-8 text-center">
+          <input (change)="onFileChange($event.target.files)" id="dropzone-file" type="file" class="hidden" multiple />
+          <p class="text-slate-700 font-semibold">Click to attach files</p>
+          <p class="text-sm text-slate-500 mt-1">PDF, DOC, PNG, JPG or GIF</p>
+        </label>
+        @if (files()?.length > 0) {
+  <div class="mt-3 space-y-2">
+    @for (file of files(); track file.name) {
+      <div class="flex items-center justify-between gap-3 w-full border border-solid border-gray-300 rounded-md p-2.5">
+        <div class="flex items-center gap-2 min-w-0">
+          <div>
+            <div class="w-10 h-10 rounded-md bg-gray-200 p-2 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-700">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="block min-w-0">
+            <h6 class="text-xs font-semibold text-gray-900 mb-0.5 truncate">
+              {{ file.name }}
+            </h6>
+            <p class="text-xs font-normal text-gray-500">
+              {{ file.size }}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="removeFile(file)"
+          class="w-10 h-10 rounded-md bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 flex items-center justify-center"
+          aria-label="Remove file"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+}
+
+        <div class="pt-2 border-t border-slate-200 flex justify-end gap-3">
+          <button
+            type="button"
+            (click)="closeTicketModal()"
+            class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+          >
+            Create Ticket
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+</div>
