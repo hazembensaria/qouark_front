@@ -62,7 +62,7 @@ error : (error : string) => {
 complete : () => {}
 };
 
-private formData = (code:string) => getFormDate({code , client_id : 'client', grant_type : 'authorization_code', redirect_uri : 'http://localhost:3000', code_verifier : '5AL6Bh2JdoIj4seR8UooJcW8GF3W-ofYfAz3RVpXiaJ-Pn_tXjjc_XO9yWTPbqA1sd-ZZC04eVNGJ8PHC1Gr-KT2TcINTFT4WMKjARb5OziA3XKoQpDIuRN5E1dif_9A'}, null);
+private formData = (code:string) => getFormDate({code , client_id : 'client', grant_type : 'authorization_code', redirect_uri : 'https://www.qouark.app', code_verifier : '5AL6Bh2JdoIj4seR8UooJcW8GF3W-ofYfAz3RVpXiaJ-Pn_tXjjc_XO9yWTPbqA1sd-ZZC04eVNGJ8PHC1Gr-KT2TcINTFT4WMKjARb5OziA3XKoQpDIuRN5E1dif_9A'}, null);
 
 private saveToken = (response : IAuthentication) => {
   console.log(response.refresh_token);
