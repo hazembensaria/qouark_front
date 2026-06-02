@@ -4,6 +4,7 @@ import { IMessage } from "./message";
 import { IOrganization } from "./organization";
 import { IProject } from "./project";
 import { defaultQuery, IQuery } from "./query";
+import { IQuota } from "./quota";
 import { IStorageFile } from "./storageFile";
 import { IStorageFolder } from "./storageFolder";
 import { ITicket } from "./ticket";
@@ -39,6 +40,7 @@ export interface IState {
     trashFolders?: IStorageFolder[];
     sharedFiles?: IStorageFile[];
     trashFiles?: IStorageFile[];
+    quota?: IQuota;
 }
 
 export const initialState : IState = {
@@ -69,6 +71,7 @@ export const initialState : IState = {
     sharedFolders : [],
     trashFolders : [],
     sharedFiles : [],
-    trashFiles : []
+    trashFiles : [],
+    quota : null
     
 }

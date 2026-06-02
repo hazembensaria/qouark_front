@@ -73,6 +73,32 @@ export const AppStore = signalStore(
           }
         })
       )))),
+    getQuota: rxMethod<void>(
+  pipe(
+    tap(() =>
+      patchState(store, { loading: true, error: null })
+    ),
+
+    switchMap(() =>
+      storageService.getQuota$().pipe(
+        tapResponse({
+          next: (response: IResponse) => {
+            patchState(store, {
+              quota: response.data.quota, 
+              loading: false,
+              error: null
+            });
+          },
+
+          error: (error: string) => {
+
+            patchState(store, {
+              loading: false,
+              error
+            });
+          }
+        })
+      )))),
       createInvitation: rxMethod<FormData>(
   pipe(
     tap(() =>

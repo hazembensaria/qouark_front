@@ -56,6 +56,7 @@ export class Storage {
   }
 
   ngOnInit() {
+    this.store.getQuota();
     this.inputSubject.pipe(
       debounceTime(500), 
       distinctUntilChanged(), 

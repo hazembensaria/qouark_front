@@ -103,6 +103,13 @@ getSharedFiles$ = () => <Observable<IResponse>>
     catchError(this.handleError)
   );
 
+    getQuota$ = () => <Observable<IResponse>>
+  this.http.get<IResponse>(`https://gateway-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/storage/quota`)
+  .pipe(
+    tap(console.log),
+    catchError(this.handleError)
+  );
+
     shareFile$(form: ShareResourceRequest): Observable<IResponse> {
         return this.http.post<IResponse>(
             `https://gateway-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/storage/file/share`,
