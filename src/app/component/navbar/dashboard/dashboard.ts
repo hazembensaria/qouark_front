@@ -10,7 +10,7 @@ import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [dataValue, CommonModule, LabelValue, ChartComponent, NgApexchartsModule, RouterLink],
+  imports: [dataValue, CommonModule, LabelValue, ChartComponent, NgApexchartsModule, RouterLink ],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {

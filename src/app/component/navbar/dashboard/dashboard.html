@@ -181,7 +181,7 @@
 } @else {
   <div class="mt-20">
     @if (!store?.organization()) {
-  <div class="mb-6 rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 p-5 text-white shadow-lg shadow-indigo-200/50">
+  <div class="mb-6 rounded-2xl border border-gray-200  p-5 text-white shadow-lg shadow-indigo-200/50">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex items-start gap-4">
         <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm ring-1 ring-white/20">
@@ -191,9 +191,9 @@
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold sm:text-xl">
+          <a routerLink="/organization" class="text-lg font-semibold sm:text-xl">
             Create your first organization
-          </h3>
+          </a>
           <p class="mt-1 text-sm text-white/85 sm:text-base">
             Start growing your work, organize your team, and unlock the full power of your dashboard.
           </p>
