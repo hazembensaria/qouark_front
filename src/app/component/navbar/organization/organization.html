@@ -1,238 +1,238 @@
-<div class="p-6">
+<div class="min-h-screen bg-white">
+  <div class="p-6 space-y-8">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between mb-6">
-
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900">
-        Organizations
-      </h1>
-
-      <p class="text-sm text-gray-500 mt-1">
-        Create and manage your workspaces
-      </p>
-    </div>
-        <!-- CHANGED CLICK HANDLER TO openOrgShareModal() -->
-       @if(store.organization().role == 'ADMIN'){
-         <button
-          (click)="openOrgShareModal()"
-          class="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-semibold py-2 px-4 rounded"
-        >
-          + invite members
-        </button>
-       }
-    <button
-      (click)="openModal()"
-      class="bg-black text-white px-5 py-3 rounded-xl font-medium hover:bg-gray-800 transition"
-    >
-      + New Organization
-    </button>
-
-  </div>
-
-  <!-- Empty State -->
-  @if (store.organization() === null) {
-    <div class="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center bg-gray-50">
-
-      <h2 class="text-2xl font-semibold text-gray-800 mb-2">
-        No Organizations Yet
-      </h2>
-
-      <p class="text-gray-500">
-        Create your first organization to start collaborating.
-      </p>
-
-    </div>
-  }
-
-  <!-- Grid -->
-  @if (store.organization() !== null) {
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-
-    
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition">
-
-          <h2 class="text-xl font-semibold text-gray-900">
-            {{ store.organization().name }}
-          </h2>
-
-          <p class="text-sm text-gray-500 mt-2">
-            Owner workspace
+    <!-- ================= ORGANIZATIONS ================= -->
+    <section>
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">
+            Organizations
+          </h1>
+          <p class="text-sm text-gray-500 mt-1">
+            Create and manage your workspaces
           </p>
-
-          <span class="inline-block mt-4 px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
-            ACTIVE
-          </span>
-
         </div>
-      
 
-    </div>
-  }
-<div class="p-6">
+        <div class="flex items-center gap-3">
+          @if (store.organization()?.role === 'ADMIN') {
+            <button
+              (click)="openOrgShareModal()"
+              class="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-100"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              Invite members
+            </button>
+          }
 
-  <!-- Header -->
-  <div class="flex items-center justify-between mb-6">
-
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900">
-        Invitations
-      </h1>
-
-      <p class="text-sm text-gray-500 mt-1">
-        Manage your startup invitations
-      </p>
-    </div>
-
-  </div>
-
-  <!-- Empty State -->
-  @if (store.invitations().length === 0) {
-
-    <div class="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center bg-gray-50">
-
-      <h2 class="text-2xl font-semibold text-gray-800 mb-2">
-        No Invitations Found
-      </h2>
-
-      <p class="text-gray-500">
-        You don’t have any invitations yet.
-      </p>
-
-    </div>
-
-  }
-
-  <!-- Invitations Table -->
-  @if (store.invitations().length > 0) {
-
-    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-
-      <!-- Table Header -->
-      <div class="grid grid-cols-5 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 text-sm font-semibold text-gray-600">
-
-        <div>Startup</div>
-        <div>Role</div>
-        <div>Invited By</div>
-        <div>Status</div>
-        <div class="text-right">Actions</div>
-
+          <button
+            (click)="openModal()"
+            class="inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 font-medium text-white transition hover:bg-gray-800"
+          >
+            + New Organization
+          </button>
+        </div>
       </div>
 
-      <!-- Table Body -->
-      @for (invitation of store.invitations(); track invitation) {
+      @if (!store.organization()) {
+        <div class="rounded-3xl border border-dashed border-gray-200 bg-gradient-to-b from-white to-slate-50 px-6 py-16 shadow-[0_20px_80px_rgba(15,23,42,0.05)]">
+          <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+            <div class="mb-8 flex items-center justify-center">
+              <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-violet-200/40 blur-3xl"></div>
+                <div class="relative flex h-36 w-36 items-center justify-center rounded-full bg-violet-50 ring-1 ring-violet-100 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="h-28 w-28 text-violet-500">
+                    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M48 142V76c0-7 5-12 12-12h80c7 0 12 5 12 12v66" opacity=".9"/>
+                      <path d="M60 86h80" opacity=".8"/>
+                      <path d="M76 104h18M106 104h18" opacity=".75"/>
+                      <path d="M76 124h48" opacity=".75"/>
+                      <path d="M72 152h56" opacity=".9"/>
+                      <path d="M80 54h40" opacity=".5"/>
+                    </g>
+                    <circle cx="40" cy="66" r="3" fill="currentColor" opacity=".18"/>
+                    <circle cx="158" cy="76" r="3" fill="currentColor" opacity=".18"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
 
-        <div class="grid grid-cols-5 gap-4 px-6 py-5 border-b border-gray-100 items-center hover:bg-gray-50 transition">
-
-          <!-- Startup -->
-          <div>
-
-            <h2 class="font-semibold text-gray-900">
-              {{ invitation.startupName }}
+            <h2 class="text-3xl font-semibold tracking-tight text-slate-700 sm:text-4xl">
+              No organizations yet
             </h2>
 
-            <p class="text-xs text-gray-400 mt-1">
-              {{ invitation.createdAt | date:'mediumDate' }}
+            <p class="mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+              Create your first organization to start growing your work, invite your team, and manage everything in one place.
             </p>
 
-          </div>
-
-          <!-- Role -->
-          <div>
-
-            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-              {{ invitation.role }}
-            </span>
-
-          </div>
-
-          <!-- Invited By -->
-          <div class="text-sm text-gray-700">
-            {{ invitation.invitedBy }}
-          </div>
-
-          <!-- Status -->
-          <div>
-
-            <span
-              class="px-3 py-1 rounded-full text-xs font-semibold"
-              [ngClass]="{
-                'bg-yellow-100 text-yellow-700': invitation.status === 'PENDING',
-                'bg-green-100 text-green-700': invitation.status === 'ACCEPTED',
-                'bg-red-100 text-red-700': invitation.status === 'REJECTED'
-              }"
-            >
-              {{ invitation.status }}
-            </span>
-
-          </div>
-
-          <!-- Actions -->
-          <div class="flex justify-end gap-3">
-
-            @if (invitation.status === 'PENDING') {
-
+            <div class="mt-8">
               <button
-                (click)="acceptInvitation(invitation.invitationUuid)"
-                class="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition"
+                (click)="openModal()"
+                class="inline-flex items-center gap-3 rounded-2xl bg-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-200 transition hover:bg-violet-700"
               >
-                Accept
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"></path>
+                </svg>
+                Create your first organization
               </button>
-
-              <button
-                (click)="rejectInvitation(invitation.invitationUuid)"
-                class="px-4 py-2 rounded-xl border border-gray-300 text-gray-700 text-sm hover:bg-gray-100 transition"
-              >
-                Reject
-              </button>
-
-            }
-
+            </div>
           </div>
-
         </div>
+      } @else {
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="flex items-start justify-between">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                  {{ store.organization().name }}
+                </h2>
+                <p class="mt-2 text-sm text-gray-500">
+                  Owner workspace
+                </p>
+              </div>
 
+              <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                ACTIVE
+              </span>
+            </div>
+          </div>
+        </div>
       }
+    </section>
 
-    </div>
+    <!-- ================= INVITATIONS ================= -->
+    <section>
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">
+          Invitations
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">
+          Manage your startup invitations
+        </p>
+      </div>
 
-  }
+      @if (store.invitations().length === 0) {
+        <div class="rounded-3xl border border-dashed border-gray-200 bg-gradient-to-b from-white to-slate-50 px-6 py-16 shadow-[0_20px_80px_rgba(15,23,42,0.05)]">
+          <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+            <div class="mb-8 flex items-center justify-center">
+              <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-violet-200/40 blur-3xl"></div>
+                <div class="relative flex h-36 w-36 items-center justify-center rounded-full bg-violet-50 ring-1 ring-violet-100 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="h-28 w-28 text-violet-500">
+                    <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M64 92c0-19 15-34 34-34s34 15 34 34-15 34-34 34-34-15-34-34Z" opacity=".9"/>
+                      <path d="M50 154c5-22 21-34 48-34s43 12 48 34" opacity=".85"/>
+                      <path d="M86 95l10 10 18-20" opacity=".9"/>
+                    </g>
+                    <circle cx="40" cy="66" r="3" fill="currentColor" opacity=".18"/>
+                    <circle cx="158" cy="76" r="3" fill="currentColor" opacity=".18"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
 
-</div>
+            <h2 class="text-3xl font-semibold tracking-tight text-slate-700 sm:text-4xl">
+              No invitations yet
+            </h2>
+
+            <p class="mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+              When people are invited to your organization, their invitations will appear here.
+            </p>
+          </div>
+        </div>
+      } @else {
+        <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+          <div class="grid grid-cols-5 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-4 text-sm font-semibold text-gray-600">
+            <div>Startup</div>
+            <div>Role</div>
+            <div>Invited By</div>
+            <div>Status</div>
+            <div class="text-right">Actions</div>
+          </div>
+
+          @for (invitation of store.invitations(); track invitation.invitationUuid) {
+            <div class="grid grid-cols-5 items-center gap-4 border-b border-gray-100 px-6 py-5 transition hover:bg-gray-50">
+              <div>
+                <h2 class="font-semibold text-gray-900">
+                  {{ invitation.startupName }}
+                </h2>
+                <p class="mt-1 text-xs text-gray-400">
+                  {{ invitation.createdAt | date:'mediumDate' }}
+                </p>
+              </div>
+
+              <div>
+                <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                  {{ invitation.role }}
+                </span>
+              </div>
+
+              <div class="text-sm text-gray-700">
+                {{ invitation.invitedBy }}
+              </div>
+
+              <div>
+                <span
+                  class="rounded-full px-3 py-1 text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-yellow-100 text-yellow-700': invitation.status === 'PENDING',
+                    'bg-green-100 text-green-700': invitation.status === 'ACCEPTED',
+                    'bg-red-100 text-red-700': invitation.status === 'REJECTED'
+                  }"
+                >
+                  {{ invitation.status }}
+                </span>
+              </div>
+
+              <div class="flex justify-end gap-3">
+                @if (invitation.status === 'PENDING') {
+                  <button
+                    (click)="acceptInvitation(invitation.invitationUuid)"
+                    class="rounded-xl bg-black px-4 py-2 text-sm text-white transition hover:bg-gray-800"
+                  >
+                    Accept
+                  </button>
+
+                  <button
+                    (click)="rejectInvitation(invitation.invitationUuid)"
+                    class="rounded-xl border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-100"
+                  >
+                    Reject
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
 </div>
 
 <!-- Create Organization Modal -->
 @if (showModal) {
-  <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-
-    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6">
-
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-6">
-
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+      <div class="mb-6 flex items-start justify-between">
         <div>
           <h2 class="text-2xl font-bold text-gray-900">
             Create Organization
           </h2>
-
-          <p class="text-sm text-gray-500 mt-1">
+          <p class="mt-1 text-sm text-gray-500">
             Add a new workspace for your team
           </p>
         </div>
 
         <button
           (click)="closeModal()"
-          class="w-10 h-10 rounded-full hover:bg-gray-100"
+          class="flex h-10 w-10 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
         >
           ✕
         </button>
-
       </div>
 
-      <!-- Form -->
-      <form  (ngSubmit)="createOrganization()" class="space-y-5">
-
-        <!-- Name -->
+      <form (ngSubmit)="createOrganization()" class="space-y-5">
         <div>
           <label class="text-sm font-medium text-gray-700">Name</label>
           <input
@@ -240,92 +240,107 @@
             [(ngModel)]="newOrganization.name"
             name="name"
             required
-            class="w-full mt-2 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-black"
+            class="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
             placeholder="Organization name"
           />
         </div>
 
-        <!-- Actions -->
         <div class="flex justify-end gap-3 pt-4">
-
           <button
             type="button"
             (click)="closeModal()"
-            class="px-5 py-3 rounded-xl border border-gray-300"
+            class="rounded-xl border border-gray-300 px-5 py-3 text-gray-700 transition hover:bg-gray-100"
           >
             Cancel
           </button>
 
           <button
             type="submit"
-            class="px-5 py-3 rounded-xl bg-black text-white"
+            class="rounded-xl bg-black px-5 py-3 text-white transition hover:bg-gray-800"
           >
             Create
           </button>
-
         </div>
-
       </form>
-
     </div>
-
   </div>
 }
 
-<!-- NEW: Invite Members to Organization Modal -->
+<!-- Invite Members Modal -->
 @if (isOrgShareModalOpen()) {
-  <div class="fixed inset-0 z-50 bg-black/40 flex justify-end" (click)="closeOrgShareModal()">
-    <div class="bg-white w-full max-w-lg h-full sm:h-auto sm:my-4 sm:mr-4 rounded-xl shadow-2xl p-6 flex flex-col overflow-y-auto" (click)="$event.stopPropagation()">
-      
-      <!-- Close / Header -->
-      <div class="flex justify-between items-start mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">Invite to Organization</h2>
-        <button (click)="closeOrgShareModal()" class="text-gray-400 hover:text-gray-600 p-1">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  <div class="fixed inset-0 z-50 flex justify-end bg-black/40" (click)="closeOrgShareModal()">
+    <div
+      class="flex h-full w-full max-w-lg flex-col overflow-y-auto rounded-l-3xl bg-white p-6 shadow-2xl sm:my-4 sm:mr-4 sm:h-auto sm:rounded-3xl"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="mb-6 flex items-start justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">
+            Invite to Organization
+          </h2>
+          <p class="mt-1 text-sm text-gray-500">
+            Search for a user and invite them to your organization
+          </p>
+        </div>
+
+        <button
+          (click)="closeOrgShareModal()"
+          class="text-gray-400 transition hover:text-gray-600"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </button>
       </div>
 
-      <!-- Add members input -->
       <div class="mb-8">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Name or email</label>
-        <div class="flex gap-2 items-start">
-          
-          <div class="relative flex-1 flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#8b5cf6] focus-within:border-transparent">
-            
-            <svg class="w-5 h-5 text-gray-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            
-            <input 
+        <label class="mb-2 block text-sm font-medium text-gray-700">Name or email</label>
+
+        <div class="flex items-start gap-2">
+          <div class="relative flex flex-1 items-center rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 focus-within:border-violet-500 focus-within:ring-2 focus-within:ring-violet-200">
+            <svg class="mr-2 h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+
+            <input
               [value]="searchQuery()"
-              (input)="searchUsersByNameOrEmail($event.target.value)" 
-              type="text" 
+              (input)="searchUsersByNameOrEmail($event.target.value)"
+              type="text"
               autocomplete="off"
-              placeholder="Select members" 
-              class="bg-transparent border-none outline-none w-full text-sm text-gray-700 placeholder-gray-400" 
+              placeholder="Select members"
+              class="w-full border-none bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
             />
-            
-            <div class="border-l pl-2 ml-2 flex items-center shrink-0">
-              <select [ngModel]="sharePermission()" (ngModelChange)="sharePermission.set($event)" class="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer">
+
+            <div class="ml-2 flex items-center border-l pl-2">
+              <select
+                [ngModel]="sharePermission()"
+                (ngModelChange)="sharePermission.set($event)"
+                class="cursor-pointer border-none bg-transparent text-sm text-gray-500 outline-none"
+              >
                 <option value="READ">Viewer</option>
                 <option value="WRITE">Editor</option>
                 <option value="ADMIN">Admin</option>
               </select>
             </div>
 
-            <!-- DROPDOWN RESULTS -->
             @if (store.users()?.length > 0 && searchQuery().length > 0 && !selectedUserToShare()) {
-              <div class="absolute left-0 top-full mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[60] max-h-60 overflow-y-auto">
+              <div class="absolute left-0 top-full z-[60] mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-100 bg-white shadow-xl">
                 @for (user of store.users(); track user.id) {
-                  <div (click)="selectUser(user)" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors">
+                  <div
+                    (click)="selectUser(user)"
+                    class="flex cursor-pointer items-center gap-3 border-b border-gray-50 p-3 transition hover:bg-gray-50 last:border-0"
+                  >
                     @if (user.avatarUrl) {
-                      <img [src]="user.avatarUrl" class="w-8 h-8 rounded-full object-cover">
+                      <img [src]="user.avatarUrl" class="h-8 w-8 rounded-full object-cover" />
                     } @else {
-                      <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold uppercase">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-xs font-bold uppercase text-blue-600">
                         {{ user.name ? user.name.charAt(0) : user.email.charAt(0) }}
                       </div>
                     }
-                    <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">{{ user.name }}</p>
-                      <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm font-medium text-gray-900">{{ user.name }}</p>
+                      <p class="truncate text-xs text-gray-500">{{ user.email }}</p>
                     </div>
                   </div>
                 }
@@ -333,173 +348,63 @@
             }
           </div>
 
-          <!-- CHANGED TO shareOrganization() -->
-          <button (click)="shareOrganization()" class="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium transition text-sm shrink-0"
-                  [disabled]="!selectedUserToShare()"
-                  [class.opacity-50]="!selectedUserToShare()"
-                  [class.cursor-not-allowed]="!selectedUserToShare()">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg> 
+          <button
+            (click)="shareOrganization()"
+            class="shrink-0 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="!selectedUserToShare()"
+          >
             Invite
           </button>
         </div>
       </div>
 
-      <h3 class="text-lg font-medium text-gray-900 mb-4">Organization Members</h3>
+      <h3 class="mb-4 text-lg font-medium text-gray-900">Organization Members</h3>
 
-      <!-- Public share toggle (Optional for Org, left as is from Folder) -->
-      <div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6">
+      <div class="mb-6 flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-4">
         <div class="flex items-center gap-3">
-          <div class="p-2 bg-white rounded-full shadow-sm">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+          <div class="rounded-full bg-white p-2 shadow-sm">
+            <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
           </div>
           <span class="text-sm font-medium text-gray-700">Allow joining via link</span>
         </div>
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" value="" class="sr-only peer">
-          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8b5cf6]"></div>
+
+        <label class="relative inline-flex cursor-pointer items-center">
+          <input type="checkbox" class="peer sr-only" />
+          <div class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-violet-600 peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
         </label>
       </div>
 
-      <!-- Search list -->
       <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-gray-500">1 team member</span>
         <div class="relative w-48">
-          <svg class="w-4 h-4 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input type="text" placeholder="Find someone ..." class="w-full bg-gray-50 border border-gray-100 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#8b5cf6]" />
+          <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <input
+            type="text"
+            placeholder="Find someone ..."
+            class="w-full rounded-lg border border-gray-100 bg-gray-50 py-1.5 pl-9 pr-3 text-sm outline-none focus:ring-1 focus:ring-violet-500"
+          />
         </div>
       </div>
 
-      <!-- User List -->
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="relative">
-              <div class="w-10 h-10 rounded-full bg-[#38bdf8] text-white flex items-center justify-center font-semibold">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-sky-400 font-semibold text-white">
                 HB
               </div>
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+              <div class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500"></div>
             </div>
             <span class="text-sm font-medium text-gray-900">hazem ben saria</span>
           </div>
+
           <span class="text-sm text-gray-500">Owner</span>
         </div>
       </div>
-
-    </div>
-  </div>
-}
-
-<!-- EXISITING: Share Folder Modal (unchanged to preserve existing functionality) -->
-@if (isShareModalOpen()) {
-  <div class="fixed inset-0 z-50 bg-black/40 flex justify-end" (click)="closeShareModal()">
-    <div class="bg-white w-full max-w-lg h-full sm:h-auto sm:my-4 sm:mr-4 rounded-xl shadow-2xl p-6 flex flex-col overflow-y-auto" (click)="$event.stopPropagation()">
-      
-      <!-- Close / Header -->
-      <div class="flex justify-between items-start mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">{{ selectedItemForShare()?.name }}</h2>
-        <button (click)="closeShareModal()" class="text-gray-400 hover:text-gray-600 p-1">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
-
-      <!-- Add members input -->
-      <div class="mb-8">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Name or email</label>
-        <div class="flex gap-2 items-start">
-          
-          <div class="relative flex-1 flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#8b5cf6] focus-within:border-transparent">
-            
-            <svg class="w-5 h-5 text-gray-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            
-            <input 
-              [value]="searchQuery()"
-              (input)="searchUsersByNameOrEmail($event.target.value)" 
-              type="text" 
-              autocomplete="off"
-              placeholder="Select members" 
-              class="bg-transparent border-none outline-none w-full text-sm text-gray-700 placeholder-gray-400" 
-            />
-            
-            <div class="border-l pl-2 ml-2 flex items-center shrink-0">
-              <select [ngModel]="sharePermission()" (ngModelChange)="sharePermission.set($event)" class="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer">
-                <option value="READ">Viewer</option>
-                <option value="WRITE">Editor</option>
-              </select>
-            </div>
-
-            <!-- DROPDOWN RESULTS -->
-            @if (store.users()?.length > 0 && searchQuery().length > 0 && !selectedUserToShare()) {
-              <div class="absolute left-0 top-full mt-2 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[60] max-h-60 overflow-y-auto">
-                @for (user of store.users(); track user.id) {
-                  <div (click)="selectUser(user)" class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors">
-                    @if (user.avatarUrl) {
-                      <img [src]="user.avatarUrl" class="w-8 h-8 rounded-full object-cover">
-                    } @else {
-                      <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold uppercase">
-                        {{ user.name ? user.name.charAt(0) : user.email.charAt(0) }}
-                      </div>
-                    }
-                    <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">{{ user.name }}</p>
-                      <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-
-          <button (click)="shareFolder()" class="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-medium transition text-sm shrink-0"
-                  [disabled]="!selectedUserToShare()"
-                  [class.opacity-50]="!selectedUserToShare()"
-                  [class.cursor-not-allowed]="!selectedUserToShare()">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg> 
-            Add
-          </button>
-        </div>
-      </div>
-
-      <h3 class="text-lg font-medium text-gray-900 mb-4">People with access</h3>
-
-      <!-- Public share toggle -->
-      <div class="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-4 mb-6">
-        <div class="flex items-center gap-3">
-          <div class="p-2 bg-white rounded-full shadow-sm">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-          </div>
-          <span class="text-sm font-medium text-gray-700">Public share</span>
-        </div>
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" value="" class="sr-only peer">
-          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8b5cf6]"></div>
-        </label>
-      </div>
-
-      <!-- Search list -->
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-sm text-gray-500">1 team member</span>
-        <div class="relative w-48">
-          <svg class="w-4 h-4 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input type="text" placeholder="Find someone ..." class="w-full bg-gray-50 border border-gray-100 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#8b5cf6]" />
-        </div>
-      </div>
-
-      <!-- User List -->
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <div class="w-10 h-10 rounded-full bg-[#38bdf8] text-white flex items-center justify-center font-semibold">
-                HB
-              </div>
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-            </div>
-            <span class="text-sm font-medium text-gray-900">hazem ben saria</span>
-          </div>
-          <span class="text-sm text-gray-500">Owner</span>
-        </div>
-      </div>
-
     </div>
   </div>
 }
