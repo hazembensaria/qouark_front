@@ -149,7 +149,7 @@
     <!-- Top Profile -->
     <div class="flex justify-end px-5 mb-8">
       <div class="w-10 h-10 border border-gray-200 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-500 font-medium cursor-pointer hover:bg-gray-50 transition">
-        Hb
+        {{ this.store.user()?.firstName?.charAt(0).toUpperCase() }}{{ this.store.user()?.lastName?.charAt(1)?.toUpperCase() }}
       </div>
     </div>
 
