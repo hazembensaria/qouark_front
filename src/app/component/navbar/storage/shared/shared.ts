@@ -25,7 +25,9 @@ export class Shared {
   constructor() {
     this.loadSharedData();
   }
-
+ ngOnInit() {
+    this.store.getQuota();
+  }
   loadSharedData() {
     // this.loading.set(true);
     this.store.getSharedFiles();

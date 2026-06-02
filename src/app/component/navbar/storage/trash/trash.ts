@@ -23,6 +23,9 @@ export class Trash {
   constructor() {
     this.loadSharedData();
   }
+  ngOnInit() {
+    this.store.getQuota();
+  }
 
   loadSharedData() {
     // this.loading.set(true);
