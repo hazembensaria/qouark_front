@@ -257,14 +257,14 @@
   </div>
 
   <p class="text-[12px] text-gray-400 mb-3">
-    {{ (store.quota().usedSizeBytes / 1024 / 1024).toFixed(2) }} MB of
-    {{ (store.quota().maxSizeBytes / 1024 / 1024).toFixed(0) }} MB used
+    {{ (store.quota()?.usedSizeBytes / 1024 / 1024)?.toFixed(2) }} MB of
+    {{ (store.quota()?.maxSizeBytes / 1024 / 1024)?.toFixed(0) }} MB used
   </p>
 
   <div class="w-full h-[5px] bg-gray-100 rounded-full overflow-hidden">
     <div
       class="bg-[#8b5cf6] h-full rounded-full transition-all duration-300"
-      [style.width.%]="(store.quota().usedSizeBytes / store.quota().maxSizeBytes) * 100">
+      [style.width.%]="(store.quota()?.usedSizeBytes / store.quota()?.maxSizeBytes) * 100">
     </div>
   </div>
 </div>
