@@ -42,8 +42,8 @@
 >
     <div class="relative shrink-0">
       <div class="h-9 w-9 rounded-full bg-sky-500 text-white grid place-items-center text-sm font-semibold">{{
-        store.profile()?.firstName?.charAt(0) || 'U'
-      }}{{ store.profile()?.lastName?.charAt(0) || 'U' }}</div>
+        store.profile()?.firstName?.charAt(0)?.toUpperCase()
+      }}{{ store.profile()?.lastName?.charAt(0)?.toUpperCase()  }}</div>
       <span class="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
     </div>
     @if (!collapsed) {
