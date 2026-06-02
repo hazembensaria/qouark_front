@@ -159,7 +159,7 @@
   <!-- Top Profile / CD icon -->
   <div class="flex justify-end px-5 mb-8">
     <div class="w-10 h-10 border border-gray-200 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-500 font-medium cursor-pointer hover:bg-gray-50 transition">
-      {{ this.store.user()?.firstName?.charAt(0).toUpperCase() }}{{ this.store.user()?.lastName?.charAt(1)?.toUpperCase() }}
+      {{ this.store.profile()?.firstName?.charAt(0).toUpperCase() }}{{ this.store.profile()?.lastName?.charAt(1)?.toUpperCase() }}
     </div>
   </div>
 
@@ -376,7 +376,7 @@
           <div class="flex items-center gap-3">
             <div class="relative">
               <div class="w-10 h-10 rounded-full bg-[#38bdf8] text-white flex items-center justify-center font-semibold">
-                HB
+                {{ this.store.profile()?.firstName?.charAt(0).toUpperCase() }}{{ this.store.profile()?.lastName?.charAt(1)?.toUpperCase() }}
               </div>
               <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
             </div>
