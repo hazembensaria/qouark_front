@@ -65,9 +65,6 @@ export const AppStore = signalStore(
           },
 
           error: (error: string) => {
-            toastService.error(
-              error ? error : "An error occurred while fetching startups"
-            );
 
             patchState(store, {
               loading: false,
