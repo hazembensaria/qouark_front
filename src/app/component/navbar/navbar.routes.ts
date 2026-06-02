@@ -56,6 +56,9 @@ export const NAVBAR_ROUTES : Routes = [
             },{
                 path: 'organization',
                 loadComponent: () => import('./organization/organization').then(c => c.Organization)
+            },{
+                path: 'plans',
+                loadComponent: () => import('./plans/plans').then(c => c.Plans)
             }
         ]
     }
