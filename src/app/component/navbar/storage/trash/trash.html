@@ -61,7 +61,7 @@
           : 'flex flex-col gap-2'"
       >
 
-        @for (folder of this.store.storageFolders(); track folder.storageFolderUuid) {
+        @for (folder of this.store.trashFolders(); track folder.storageFolderUuid) {
 
           <div
             (click)="openFolder(folder)"
@@ -86,7 +86,7 @@
 
         }
 
-        @if (this.store.storageFolders().length === 0) {
+        @if (this.store.trashFolders().length === 0) {
           <div class="text-sm text-gray-400">
             No shared folders
           </div>
@@ -107,7 +107,7 @@
           : 'flex flex-col gap-2'"
       >
 
-        @for (file of this.store.storageFiles(); track file.storageFileUuid) {
+        @for (file of this.store.trashFiles(); track file.storageFileUuid) {
 
           <div
             (click)="openFile(file)"
@@ -132,7 +132,7 @@
 
         }
 
-        @if (this.store.storageFiles().length === 0) {
+        @if (this.store.trashFiles().length === 0) {
           <div class="text-sm text-gray-400">
             No shared files
           </div>
