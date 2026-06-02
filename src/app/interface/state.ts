@@ -35,6 +35,10 @@ export interface IState {
     project?: IProject;
     organization?: IOrganization;
     invitations?: IInvitation[];
+    sharedFolders?: IStorageFolder[];
+    trashFolders?: IStorageFolder[];
+    sharedFiles?: IStorageFile[];
+    trashFiles?: IStorageFile[];
 }
 
 export const initialState : IState = {
@@ -61,6 +65,10 @@ export const initialState : IState = {
     projects : [],
     project : null,
     organization : null,
-    invitations : []
+    invitations : [],
+    sharedFolders : [],
+    trashFolders : [],
+    sharedFiles : [],
+    trashFiles : []
     
 }

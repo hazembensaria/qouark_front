@@ -221,7 +221,7 @@ export const AppStore = signalStore(
         tapResponse({
           next: (response: IResponse) => {
             patchState(store, {
-              storageFolders: response.data.sharedFolders,
+              sharedFolders: response.data.sharedFolders,
               loading: false,
               error: null
             });
@@ -253,7 +253,7 @@ export const AppStore = signalStore(
         tapResponse({
           next: (response: IResponse) => {
             patchState(store, {
-              storageFolders: response.data.folders,
+              trashFolders: response.data.folders,
               loading: false,
               error: null
             });
@@ -263,7 +263,7 @@ export const AppStore = signalStore(
 
           error: (error: string) => {
             toastService.error(
-              error || "An error occurred while fetching shared folders"
+              error || "An error occurred while fetching trash folders"
             );
 
             patchState(store, {
@@ -284,7 +284,7 @@ export const AppStore = signalStore(
         tapResponse({
           next: (response: IResponse) => {
             patchState(store, {
-              storageFiles: response.data.sharedFiles,
+              sharedFiles: response.data.sharedFiles,
               loading: false,
               error: null
             });
@@ -293,7 +293,7 @@ export const AppStore = signalStore(
 
           error: (error: string) => {
             toastService.error(
-              error || "An error occurred while fetching shared folders"
+              error || "An error occurred while fetching shared files"
             );
 
             patchState(store, {
@@ -304,7 +304,7 @@ export const AppStore = signalStore(
         })
       )))),
 
-             getTrashFiles: rxMethod<void>(
+    getTrashFiles: rxMethod<void>(
   pipe(
     tap(() =>
       patchState(store, { loading: true, error: null })
@@ -315,7 +315,7 @@ export const AppStore = signalStore(
         tapResponse({
           next: (response: IResponse) => {
             patchState(store, {
-              storageFiles: response.data.files,
+              trashFiles: response.data.files,
               loading: false,
               error: null
             });
