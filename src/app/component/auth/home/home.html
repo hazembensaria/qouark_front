@@ -1,199 +1,111 @@
-<script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
-          },
-          boxShadow: {
-            soft: "0 10px 30px rgba(16, 24, 40, 0.08)",
-            card: "0 8px 20px rgba(16, 24, 40, 0.06)",
-            floating: "0 10px 25px -5px rgba(139, 92, 246, 0.4)",
-          },
-          colors: {
-            brand: {
-              50: "#F5F0FF",
-              100: "#ECE2FF",
-              400: "#A78BFA",
-              500: "#8B5CF6", /* Purple from button */
-              600: "#7C3AED", /* Darker purple */
-              700: "#6D28D9",
-            },
-          },
-        },
-      },
-    };
-  </script>
+<div class="relative min-h-screen overflow-hidden bg-white font-[Space Grotesk] text-slate-900">
 
-<body class="font-sans bg-[#FDFBFE] text-slate-900 relative">
-  <main>
-    @if(loading()){
-      <div class="flex h-screen items-center justify-center bg-white">
-        <div class="flex items-center p-4 mb-4 text-brand-800 rounded-lg bg-brand-50 border border-brand-100">
-          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-brand-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <p class="text-sm font-medium">Loading platform...</p>
-        </div>  
+  <!-- GRID BACKGROUND -->
+  <div class="pointer-events-none absolute inset-0 opacity-30"
+       style="background-image: linear-gradient(transparent 1px ,#8b5cf611 1px), linear-gradient(90deg, transparent 1px , #8b5cf611 1px); background-size: 48px 48px; mask-image: radial-gradient(circle at bottom, black 40%, transparent 100%);">
+  </div>
+
+  <!-- GLOW -->
+
+  <!-- FLOATING ORBS -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+
+    <div class="absolute top-[10%] left-[5%] h-[320px] w-[320px] rounded-full bg-purple-400/10 blur-3xl animate-[pulse_6s_infinite]"></div>
+
+    <div class="absolute top-[60%] left-[80%] h-[200px] w-[200px] rounded-full bg-indigo-400/10 blur-3xl animate-[bounce_8s_infinite]"></div>
+
+    <div class="absolute top-[30%] left-[88%] h-[140px] w-[140px] rounded-full bg-violet-400/10 blur-3xl animate-pulse"></div>
+
+    <div class="absolute top-[75%] left-[12%] h-[100px] w-[100px] rounded-full bg-purple-500/10 blur-3xl animate-bounce"></div>
+
+  </div>
+
+  <!-- MAIN -->
+  <section class="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 py-24 text-center">
+
+    <!-- BADGE -->
+    <div class="mb-10 inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50 px-5 py-2 text-sm text-purple-700 shadow-sm hover:bg-purple-100 transition">
+      <span class="h-2 w-2 animate-pulse rounded-full bg-purple-500"></span>
+      #1 workspace for modern teams
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"/>
+      </svg>
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="text-5xl font-extrabold leading-[1.1] tracking-tight sm:text-6xl">
+      Stop juggling<br />your tools.<br />
+      <span class="text-purple-500">Work</span> smarter with US.
+
+      <span class="ml-2 inline-flex h-14 w-14 animate-bounce items-center justify-center rounded-2xl bg-purple-200 shadow-lg">
+        <svg width="26" height="26" viewBox="0 0 144 144" fill="none">
+          <rect width="144" height="144" rx="28" fill="#7C3AED"/>
+          <rect x="28" y="36" width="50" height="14" rx="5" fill="white"/>
+          <rect x="86" y="36" width="22" height="14" rx="5" fill="white" opacity="0.4"/>
+          <rect x="28" y="64" width="32" height="14" rx="5" fill="white"/>
+          <rect x="68" y="64" width="40" height="14" rx="5" fill="white" opacity="0.4"/>
+          <rect x="28" y="92" width="62" height="14" rx="5" fill="white"/>
+        </svg>
+      </span>
+    </h1>
+
+    <!-- SUBTITLE -->
+    <p class="mt-8 max-w-xl text-base text-slate-500 leading-relaxed">
+      The only workspace designed for modern teams, with AI that writes and translates in 19 languages—from Dakar to Nairobi.
+    </p>
+
+    <!-- TOOLS -->
+    <div class="mt-14 flex flex-wrap justify-center gap-4">
+
+      <!-- ACTIVE -->
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border border-purple-300 bg-purple-50 text-purple-600 shadow-sm animate-bounce">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09l2.846.813-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+        </svg>
+        <span class="text-xs font-semibold">AI</span>
       </div>
-    }@else {
-      @if(!loading()){
-        
-        <!-- NEW HERO SECTION (Based on Image 4) -->
-        <section class="relative pt-24 pb-20 sm:pt-32 sm:pb-28 overflow-hidden text-center bg-gradient-to-b from-[#FAF8FC] to-white">
-          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            
-            <!-- Badge -->
-            <a href="#" class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:shadow transition-shadow mb-10">
-              #1 Workspace for modern teams 
-              <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
-            </a>
 
-            <!-- Headline -->
-            <h1 class="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl max-w-4xl mx-auto leading-[1.1]">
-              Stop juggling your tools.<br>
-              <span class="text-brand-500">Work</span> Smarter with AI.
-              <!-- Inline Logo Icon -->
-              <span class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-brand-500 text-white rounded-[1.25rem] align-middle shadow-lg -mt-2 ml-1">
-                <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-              </span>
-            </h1>
+      <!-- OTHERS -->
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border bg-white text-slate-500 shadow-sm transition hover:-translate-y-1 hover:border-purple-300 hover:text-purple-500">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+        <span class="text-xs">Projects</span>
+      </div>
 
-            <!-- Subheadline -->
-            <p class="mx-auto mt-8 max-w-2xl text-lg text-slate-700 leading-relaxed font-medium">
-              The only workspace designed for modern teams, with AI that writes and translates in 19 languages and works everywhere—from Dakar to Nairobi.
-            </p>
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border bg-white text-slate-500 shadow-sm transition hover:-translate-y-1 hover:border-purple-300 hover:text-purple-500">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <span class="text-xs">Video</span>
+      </div>
 
-            <!-- Tools / Features Grid (Square Icons) -->
-            <div class="mt-12 flex flex-wrap justify-center gap-3 sm:gap-4 max-w-4xl mx-auto">
-              
-              <!-- AI (Highlighted) -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-[#38BDF8] bg-white shadow-sm text-[#38BDF8] hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09l2.846.813-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" /></svg>
-                <span class="text-sm font-bold">AI</span>
-              </div>
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border bg-white text-slate-500 shadow-sm transition hover:-translate-y-1 hover:border-purple-300 hover:text-purple-500">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor"><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>
+        <span class="text-xs">Chat</span>
+      </div>
 
-              <!-- Projects -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                <span class="text-sm font-medium">Projects</span>
-              </div>
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border bg-white text-slate-500 shadow-sm transition hover:-translate-y-1 hover:border-purple-300 hover:text-purple-500">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"/></svg>
+        <span class="text-xs">Files</span>
+      </div>
 
-              <!-- Video -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                <span class="text-sm font-medium">Video</span>
-              </div>
+      <div class="flex h-24 w-24 flex-col items-center justify-center rounded-2xl border bg-white text-slate-500 shadow-sm transition hover:-translate-y-1 hover:border-purple-300 hover:text-purple-500">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor"><path d="M8 7V3m8 4V3"/></svg>
+        <span class="text-xs">Calendar</span>
+      </div>
 
-              <!-- Chat -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                <span class="text-sm font-medium">Chat</span>
-              </div>
+    </div>
 
-              <!-- Files -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
-                <span class="text-sm font-medium">Files</span>
-              </div>
+    <!-- BUTTONS -->
+    <div class="mt-14 flex flex-col gap-4 sm:flex-row">
 
-              <!-- Calendar -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <span class="text-sm font-medium">Calendar</span>
-              </div>
+      <button class="rounded-xl bg-purple-600 px-8 py-3 font-bold text-white shadow-lg shadow-purple-300 transition hover:-translate-y-1 hover:bg-purple-700">
+        Try for free
+      </button>
 
-              <!-- Notes -->
-              <div class="flex flex-col items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-500 hover:border-gray-300 hover:-translate-y-1 transition-transform cursor-pointer">
-                <svg class="w-7 h-7 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                <span class="text-sm font-medium">Notes</span>
-              </div>
-            </div>
+      <button class="rounded-xl border border-slate-200 bg-white px-8 py-3 font-bold text-slate-800 shadow-sm transition hover:-translate-y-1 hover:bg-slate-50">
+        Request a demo
+      </button>
 
-            <!-- Action Buttons -->
-            <div class="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a href="#" class="w-full sm:w-auto rounded-xl bg-[#8B5CF6] px-10 py-4 text-base font-bold text-white shadow-md hover:bg-brand-600 hover:-translate-y-0.5 transition-all">
-                Try for free
-              </a>
-              <a href="#" class="w-full sm:w-auto rounded-xl bg-[#111827] px-10 py-4 text-base font-bold text-white shadow-md hover:bg-black hover:-translate-y-0.5 transition-all">
-                Request a demo
-              </a>
-            </div>
+    </div>
 
-          </div>
-        </section>
-
-        <!-- FEATURES GRID SECTION -->
-        <section class="bg-gray-50 py-24">
-          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-              <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">Everything works together, finally.</h2>
-              <p class="mt-4 text-lg text-slate-500">Stop wasting time switching between tabs. Qouark centralizes your entire workflow.</p>
-            </div>
-
-            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <!-- Feature 1 -->
-              <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Unified Ticketing</h3>
-                <p class="text-slate-500 leading-relaxed">Resolve customer and internal requests in a beautifully organized, AI-powered inbox.</p>
-              </div>
-
-              <!-- Feature 2 -->
-              <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Team Collaboration</h3>
-                <p class="text-slate-500 leading-relaxed">Turn tickets into chats instantly. Mention teammates, launch video calls, and share files seamlessly.</p>
-              </div>
-
-              <!-- Feature 3 -->
-              <div class="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Automated Workflows</h3>
-                <p class="text-slate-500 leading-relaxed">Set up rules to automatically assign, escalate, and resolve requests without human intervention.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- CALL TO ACTION SECTION -->
-        <section class="relative py-24 bg-brand-600 overflow-hidden">
-          <div class="absolute inset-0 opacity-10">
-            <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M0 40V0H40" fill="none" stroke="white" stroke-width="1"></path>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-pattern)"></rect>
-            </svg>
-          </div>
-          <div class="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-extrabold text-white sm:text-5xl">Ready to transform your workspace?</h2>
-            <p class="mt-6 text-xl text-brand-100 max-w-2xl mx-auto">Join thousands of modern teams replacing chaos with clarity. Set up your workspace in less than 3 minutes.</p>
-            <div class="mt-10 flex justify-center gap-4">
-              <a href="#" class="rounded-full bg-white px-8 py-4 text-lg font-bold text-brand-700 shadow-lg hover:bg-gray-50 transition">
-                Start for free
-              </a>
-              <a href="#" class="rounded-full bg-brand-700 border border-brand-500 px-8 py-4 text-lg font-bold text-white shadow-lg hover:bg-brand-800 transition">
-                Book a demo
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <!-- FLOATING MESSAGE BUTTON -->
-        <button class="fixed bottom-6 right-6 z-50 rounded-full bg-[#8B5CF6] px-5 py-3 text-sm font-semibold text-white shadow-floating hover:-translate-y-1 hover:bg-[#7C3AED] transition-all flex items-center gap-2 border border-white/20">
-          <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
-          Message us
-        </button>
-
-      }}
+  </section>
+</div>

@@ -125,4 +125,4 @@ export const getValue = (values: any) => {
 };
 
 
-export const logoutUrl = 'https://auth-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/logout';
+export const logoutUrl = 'https://login.qouark.app/logout';

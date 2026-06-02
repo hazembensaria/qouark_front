@@ -77,7 +77,7 @@ export class UserService {
   );
 
     validateCode$ = (form : FormData) => <Observable<IAuthentication>>
-  this.http.post<IResponse>(`https://auth-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/oauth2/token`, form)
+  this.http.post<IResponse>(`https://login.qouark.app/oauth2/token`, form)
   .pipe(
     tap(console.log),
     catchError(this.handleError)
@@ -191,7 +191,7 @@ getMyInvitations$ = () => <Observable<IResponse>>
 
   refreshToken$ = (form: FormData) => <Observable<IAuthentication>>
    this.http.post<IAuthentication>
-     (`https://auth-service.happyforest-b11122d9.francecentral.azurecontainerapps.io/oauth2/token`, form )
+     (`https://login.qouark.app/oauth2/token`, form )
      .pipe(
        tap((response: IAuthentication) => {
           console.log('Token refreshed', response);
