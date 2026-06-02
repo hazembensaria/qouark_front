@@ -16,7 +16,6 @@
 
     <!-- HEADER ACTIONS -->
     <div class="flex justify-between items-center">
-
       <div></div>
 
       <div class="flex gap-2">
@@ -49,98 +48,144 @@
       </div>
     }
 
+    <!-- EMPTY STATE -->
+    @if (!loading() && this.store.sharedFolders().length === 0 && this.store.sharedFiles().length === 0) {
+      <div class="rounded-3xl border border-gray-100 bg-gradient-to-b from-white to-slate-50 shadow-[0_20px_80px_rgba(15,23,42,0.06)] px-6 py-16 sm:px-10">
+        <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+
+          <!-- Illustration -->
+          <div class="mb-8 flex items-center justify-center">
+            <div class="relative">
+              <div class="absolute inset-0 rounded-full bg-purple-200/40 blur-3xl"></div>
+
+              <div class="relative flex h-36 w-36 items-center justify-center rounded-full bg-purple-50 ring-1 ring-purple-100 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="h-28 w-28 text-purple-500">
+                  <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M54 128c0-10 8-18 18-18h56c10 0 18 8 18 18v24H54v-24Z" opacity=".9"/>
+                    <path d="M68 110V78c0-8 6-14 14-14h36c8 0 14 6 14 14v32" opacity=".9"/>
+                    <path d="M82 80h36" opacity=".7"/>
+                    <path d="M92 62l-8-10m24 10l8-10m-32 26-14-6m48 6 14-6" opacity=".8"/>
+                    <path d="M74 152h52" opacity=".9"/>
+                    <path d="M88 128h24" opacity=".9"/>
+                    <path d="M72 94h6m14 0h6m14 0h6" opacity=".75"/>
+                  </g>
+
+                  <!-- little sparkle dots -->
+                  <circle cx="40" cy="62" r="3" fill="currentColor" opacity=".25"/>
+                  <circle cx="160" cy="70" r="3" fill="currentColor" opacity=".25"/>
+                  <circle cx="150" cy="44" r="2.5" fill="currentColor" opacity=".18"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <h2 class="text-3xl font-semibold tracking-tight text-slate-700 sm:text-4xl">
+            Shared file space.
+          </h2>
+
+          <p class="mt-5 max-w-xl text-base leading-7 text-slate-500 sm:text-lg">
+            This space is reserved for files and folders that other members of your
+            organization have shared with you.
+          </p>
+
+          <!-- Action -->
+          <div class="mt-8">
+            <a
+              routerLink="/files"
+              class="inline-flex items-center gap-3 rounded-2xl bg-purple-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700 hover:shadow-purple-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4m8-8v16" />
+              </svg>
+              Back to My drive
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- ================= FOLDERS ================= -->
-    <div>
-      <h2 class="text-sm font-medium text-gray-500 mb-3">
-        Shared Folders
-      </h2>
+    @if (!loading() && (this.store.sharedFolders().length > 0 || this.store.sharedFiles().length > 0)) {
+      <div>
+        <h2 class="text-sm font-medium text-gray-500 mb-3">
+          Shared Folders
+        </h2>
 
-      <div
-        [ngClass]="viewMode() === 'grid'
-          ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'
-          : 'flex flex-col gap-2'"
-      >
+        <div
+          [ngClass]="viewMode() === 'grid'
+            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'
+            : 'flex flex-col gap-2'"
+        >
+          @for (folder of this.store.sharedFolders(); track folder.storageFolderUuid) {
+            <div
+              (click)="openFolder(folder)"
+              class="cursor-pointer border border-gray-200 rounded-2xl p-4 hover:bg-gray-50 transition flex items-center gap-3 bg-white"
+            >
+              <div class="text-3xl">
+                📁
+              </div>
 
-        @for (folder of this.store.sharedFolders(); track folder.storageFolderUuid) {
+              <div class="flex flex-col min-w-0">
+                <span class="font-medium text-gray-800 truncate">
+                  {{ folder.name }}
+                </span>
 
-          <div
-            (click)="openFolder(folder)"
-            class="cursor-pointer border border-gray-200 rounded-2xl p-4 hover:bg-gray-50 transition flex items-center gap-3 bg-white"
-          >
-
-            <div class="text-3xl">
-              📁
+                <span class="text-xs text-gray-500">
+                  {{ folder.permission }} • Shared
+                </span>
+              </div>
             </div>
+          }
 
-            <div class="flex flex-col min-w-0">
-              <span class="font-medium text-gray-800 truncate">
-                {{ folder.name }}
-              </span>
-
-              <span class="text-xs text-gray-500">
-                {{ folder.permission }} • Shared
-              </span>
+          @if (this.store.sharedFolders().length === 0) {
+            <div class="text-sm text-gray-400">
+              No shared folders
             </div>
-
-          </div>
-
-        }
-
-        @if (this.store.sharedFolders().length === 0) {
-          <div class="text-sm text-gray-400">
-            No shared folders
-          </div>
-        }
-
+          }
+        </div>
       </div>
-    </div>
 
-    <!-- ================= FILES ================= -->
-    <div>
-      <h2 class="text-sm font-medium text-gray-500 mb-3">
-        Shared Files
-      </h2>
+      <!-- ================= FILES ================= -->
+      <div>
+        <h2 class="text-sm font-medium text-gray-500 mb-3">
+          Shared Files
+        </h2>
 
-      <div
-        [ngClass]="viewMode() === 'grid'
-          ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'
-          : 'flex flex-col gap-2'"
-      >
+        <div
+          [ngClass]="viewMode() === 'grid'
+            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4'
+            : 'flex flex-col gap-2'"
+        >
+          @for (file of this.store.sharedFiles(); track file.storageFileUuid) {
+            <div
+              (click)="openFile(file)"
+              class="cursor-pointer border border-gray-200 rounded-2xl p-4 hover:bg-gray-50 transition flex items-center gap-3 bg-white"
+            >
+              <div class="text-3xl">
+                {{ getIcon(file) }}
+              </div>
 
-        @for (file of this.store.sharedFiles(); track file.storageFileUuid) {
+              <div class="flex flex-col min-w-0">
+                <span class="font-medium text-gray-800 truncate">
+                  {{ file.name }}{{ file.extension ? '.' + file.extension : '' }}
+                </span>
 
-          <div
-            (click)="openFile(file)"
-            class="cursor-pointer border border-gray-200 rounded-2xl p-4 hover:bg-gray-50 transition flex items-center gap-3 bg-white"
-          >
-
-            <div class="text-3xl">
-              {{ getIcon(file) }}
+                <span class="text-xs text-gray-500">
+                  {{ file.permission }} • Shared
+                </span>
+              </div>
             </div>
+          }
 
-            <div class="flex flex-col min-w-0">
-              <span class="font-medium text-gray-800 truncate">
-                {{ file.name }}{{ file.extension ? '.' + file.extension : '' }}
-              </span>
-
-              <span class="text-xs text-gray-500">
-                {{ file.permission }} • Shared
-              </span>
+          @if (this.store.sharedFiles().length === 0) {
+            <div class="text-sm text-gray-400">
+              No shared files
             </div>
-
-          </div>
-
-        }
-
-        @if (this.store.sharedFiles().length === 0) {
-          <div class="text-sm text-gray-400">
-            No shared files
-          </div>
-        }
-
+          }
+        </div>
       </div>
-    </div>
-
+    }
   </div>
 
   <!-- ================= RIGHT SIDEBAR ================= -->
@@ -154,87 +199,86 @@
     </div>
 
     <!-- FILE SPACE NAV -->
- <!-- FILE SPACE NAV -->
-<div class="mb-6 px-3">
-  <h5 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-2">
-    File Space
-  </h5>
+    <div class="mb-6 px-3">
+      <h5 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 px-2">
+        File Space
+      </h5>
 
-  <nav class="space-y-0.5">
+      <nav class="space-y-0.5">
 
-    <!-- Recent Files -->
-    <a
-      routerLink="/files/recent"
-      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
-      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
-    >
-      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
-        </path>
-      </svg>
-      Recent files
-    </a>
+        <!-- Recent Files -->
+        <a
+          routerLink="/files/recent"
+          routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+        >
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
+          Recent files
+        </a>
 
-    <!-- My Drive -->
-    <a
-      routerLink="/files"
-      [routerLinkActiveOptions]="{ exact: true }"
-      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
-      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
-    >
-      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
-        </path>
-      </svg>
-      My Drive
-    </a>
+        <!-- My Drive -->
+        <a
+          routerLink="/files"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+        >
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+            </path>
+          </svg>
+          My Drive
+        </a>
 
-    <!-- Favorites -->
-    <a
-      routerLink="/files/favorites"
-      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
-      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
-    >
-      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
-        </path>
-      </svg>
-      Favorites
-    </a>
+        <!-- Favorites -->
+        <a
+          routerLink="/files/favorites"
+          routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+        >
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+            </path>
+          </svg>
+          Favorites
+        </a>
 
-    <!-- Shared -->
-    <a
-      routerLink="/files/shared"
-      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
-      class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
-    >
-      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-        </path>
-      </svg>
-      Shared with me
-    </a>
+        <!-- Shared -->
+        <a
+          routerLink="/files/shared"
+          routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition"
+        >
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+            </path>
+          </svg>
+          Shared with me
+        </a>
 
-    <!-- Trash -->
-    <a
-      routerLink="/files/trash"
-      routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
-      class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition mt-1"
-    >
-      <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-        </path>
-      </svg>
-      Trash
-    </a>
+        <!-- Trash -->
+        <a
+          routerLink="/files/trash"
+          routerLinkActive="bg-white border border-gray-100 shadow-sm text-gray-800"
+          class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition mt-1"
+        >
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+            </path>
+          </svg>
+          Trash
+        </a>
 
-  </nav>
-</div>
+      </nav>
+    </div>
 
     <!-- STORAGE -->
     <div class="mt-auto px-5 pb-6 pt-6 border-t border-gray-100/80 text-center bg-gradient-to-t from-white to-transparent">
@@ -255,7 +299,6 @@
       <div class="w-full h-[5px] bg-gray-100 rounded-full overflow-hidden">
         <div class="bg-[#8b5cf6] w-[2%] h-full rounded-full"></div>
       </div>
-
     </div>
 
   </aside>
