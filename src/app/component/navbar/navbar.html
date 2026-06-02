@@ -13,9 +13,11 @@
     <div class="p-3 border-b border-gray-200 shrink-0 relative">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2 min-w-0">
-          <img src="favicon-32x32.png" alt="Qouark" class="w-[30px] text-2xl font-bold tracking-tight text-brand-600">
+          @if (collapsed) {
+            <img src="favicon-32x32.png" alt="Qouark" class="w-[30px] text-2xl font-bold tracking-tight text-brand-600">
+          }
           @if (!collapsed) {
-            <img src="qouark_app_logo.svg" alt="Qouark" class="w-[120px] text-2xl font-bold tracking-tight text-brand-600">
+            <img src="qouark_app_logo.svg" alt="Qouark" class="w-[180px] text-2xl font-bold tracking-tight text-brand-600">
           }
         </div>
       </div>
