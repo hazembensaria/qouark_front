@@ -1,8 +1,8 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
-import { AppStore } from '../../../store/app.store';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
+import { AppStore } from '../../../store/app.store';
 import { getValue } from '../../../utils/fileutils';
 
 @Component({
@@ -13,16 +13,24 @@ import { getValue } from '../../../utils/fileutils';
 export class Reports {
   readonly store = inject(AppStore);
   private readonly location = inject(Location);
+  private readonly route = inject(ActivatedRoute);
+
   isStatusMenuOpen = signal<boolean>(false);
   isTypeMenuOpen = signal<boolean>(false);
   isPriorityMenuOpen = signal<boolean>(false);
+
   Menu = Menu;
-  request: {};
+
+  projectUuid = signal<string | null>(null);
 
   goBack = () => this.location.back();
 
+  constructor() {
+    this.projectUuid.set(this.route.snapshot.paramMap.get('projectUuid'));
+  }
+
   toggleMenu = (menu: Menu) => {
-    switch(menu) {
+    switch (menu) {
       case Menu.STATUS: {
         this.isStatusMenuOpen.update(open => !open);
         this.isTypeMenuOpen.set(false);
@@ -49,26 +57,34 @@ export class Reports {
 
   @HostListener('document:click', ['$event'])
   onClick = (event: MouseEvent) => {
-    const target = <HTMLElement>event.target;
+    const target = event.target as HTMLElement;
     const status = target.closest('.status');
     const type = target.closest('.type');
     const priority = target.closest('.priority');
-    if(!status) {
+
+    if (!status) {
       this.isStatusMenuOpen.set(false);
     }
-    if(!type) {
+    if (!type) {
       this.isTypeMenuOpen.set(false);
     }
-    if(!priority) {
+    if (!priority) {
       this.isPriorityMenuOpen.set(false);
     }
   };
 
   report = (form: NgForm) => {
     this.closeMenu();
-    this.request = getValue(form.value);
-    this.store.setReportRequest(this.request);
-    this.store.getReport(this.request);
+
+    const query = getValue(form.value);
+
+    const request = {
+      ...query,
+      projectUuid: this.projectUuid(),
+    };
+
+    this.store.setReportRequest(request);
+    this.store.getReport(request);
   };
 
   downloadPDF = () => {
@@ -84,4 +100,8 @@ export class Reports {
   };
 }
 
-enum Menu { STATUS = 'STATUS', TYPE = 'TYPE', PRIORITY = 'PRIORITY' };
+enum Menu {
+  STATUS = 'STATUS',
+  TYPE = 'TYPE',
+  PRIORITY = 'PRIORITY',
+}
