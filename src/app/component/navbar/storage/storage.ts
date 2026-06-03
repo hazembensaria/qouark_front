@@ -207,6 +207,7 @@ sharePermission = signal<'READ' | 'WRITE' | 'ADMIN'>('READ');
        this.store.shareFile({
       resourceUuid: item.storageFileUuid, // Pick up the missing resource UUID here
       sharedWithUserUuid: selectedUser.userUuid,
+      sharedWithUserEmail: selectedUser.email, // Pass the email for better backend handling
       permission: this.sharePermission()  // Pass the dynamically selected permission
     });
       console.warn('File sharing is not implemented yet.'); // Placeholder for file sharing logic
@@ -224,6 +225,7 @@ sharePermission = signal<'READ' | 'WRITE' | 'ADMIN'>('READ');
     this.store.shareFolder({
       resourceUuid: item.storageFolderUuid, // Pick up the missing resource UUID here
       sharedWithUserUuid: selectedUser.userUuid,
+      sharedWithUserEmail: selectedUser.email, // Pass the email for better backend handling
       permission: this.sharePermission()  // Pass the dynamically selected permission
     });
 

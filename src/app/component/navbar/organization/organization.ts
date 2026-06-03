@@ -119,6 +119,7 @@ export class Organization {
     this.store.shareFolder({
       resourceUuid: item.storageFolderUuid,
       sharedWithUserUuid: selectedUser.userUuid,
+      sharedWithUserEmail: selectedUser.email, 
       permission: this.sharePermission() 
     });
 

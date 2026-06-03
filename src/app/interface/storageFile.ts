@@ -12,5 +12,6 @@ export interface IStorageFile {
 export interface ShareResourceRequest {
   resourceUuid: string; 
   sharedWithUserUuid: string;
+  sharedWithUserEmail: string; // Optional email for better backend handling
   permission: 'READ' | 'WRITE' | 'ADMIN';
 }
