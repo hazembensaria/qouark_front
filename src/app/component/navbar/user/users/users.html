@@ -144,11 +144,13 @@
                               </div>
                            </td>
                            <td class="pl-5">
-                              <div class="">
+                              @if(store?.organization()?.role =='ADMIN'){
+                                      <div class="">
                                  <a [routerLink]="['/users/', user.userUuid]" class="disabled:bg-gray-300 cursor-pointer text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm p-2">
                                  View
                                  </a>
                               </div>
+                              }
                            </td>
                         </tr>
                       }
